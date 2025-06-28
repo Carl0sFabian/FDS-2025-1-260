@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
+import os
 
 file_paths = {
     "EE.UU": "data/EE.UU/USvideos_cc50_202101.csv",
@@ -18,6 +19,9 @@ json_paths = {
     "México": "data/México/MX_category_id.json",
     "Corea del Sur": "data/Korea del Surr/KR_category_id.json"
 }
+
+# Crear carpeta para guardar datasets limpios
+os.makedirs("data_limpios", exist_ok=True)
 
 # Análisis por país
 for pais in file_paths:
@@ -41,32 +45,51 @@ for pais in file_paths:
     # VERIFICACIÓN DE CALIDAD DE LOS DATOS
     print("\n🔍 VERIFICACIÓN DE CALIDAD")
 
-    # 1. Valores negativos
     for col in ["views", "likes", "dislikes", "comment_count"]:
         if (df[col] < 0).any():
             print(f"⚠️ {col} contiene valores negativos")
         else:
             print(f"✔️ {col} no contiene valores negativos")
 
-    # 2. Lógica: comments_disabled = True → comment_count debe ser 0
     inconsistentes_com = df[(df["comments_disabled"] == True) & (df["comment_count"] > 0)]
     print(f"🔗 Inconsistencias comments_disabled: {len(inconsistentes_com)} registros")
 
-    # 3. Lógica: ratings_disabled = True → likes/dislikes deben ser 0
     inconsistentes_rat = df[(df["ratings_disabled"] == True) & ((df["likes"] > 0) | (df["dislikes"] > 0))]
     print(f"🔗 Inconsistencias ratings_disabled: {len(inconsistentes_rat)} registros")
 
-    # 4. Detección de outliers por encima del percentil 99.9
     for col in ["views", "likes", "dislikes", "comment_count"]:
         q999 = df[col].quantile(0.999)
         outliers = df[df[col] > q999]
         print(f"📈 {col}: {len(outliers)} registros sobre el p99.9")
 
-    # VISUALIZACIÓN
-    df["log_views"] = np.log1p(df["views"])
-    df["publish_hour"] = pd.to_datetime(df["publish_time"], errors='coerce').dt.hour
+    # PREPARACIÓN DE LOS DATOS
+    print("\n🛠️ PREPARACIÓN DE LOS DATOS")
 
-    # 1. Histograma log(views)
+    # Limpiar datos faltantes
+    df["description"] = df["description"].fillna("Sin descripción")
+    df["state"] = df["state"].fillna("Desconocido")
+    df["lat"] = df["lat"].fillna(0.0)
+    df["lon"] = df["lon"].fillna(0.0)
+
+    # Winsorización por p99.9
+    for col in ["views", "likes", "dislikes", "comment_count"]:
+        limite = df[col].quantile(0.999)
+        df[col] = np.where(df[col] > limite, limite, df[col])
+
+    # Construcción de nuevos datos
+    df["log_views"] = np.log1p(df["views"])
+    df["title_length"] = df["title"].astype(str).apply(len)
+    df["desc_length"] = df["description"].astype(str).apply(len)
+    df["tag_count"] = df["tags"].astype(str).apply(lambda x: len(x.split("|")) if x != "[None]" else 0)
+    df["publish_hour"] = pd.to_datetime(df["publish_time"], errors='coerce').dt.hour
+    df["trending_day"] = pd.to_datetime(df["trending_date"], errors='coerce', format="%y.%d.%m").dt.dayofweek
+
+    # Guardar CSV limpio
+    clean_path = f"data_limpios/{pais.replace(' ', '_')}_limpio.csv"
+    df.to_csv(clean_path, index=False)
+    print(f"✅ Datos limpios guardados en: {clean_path}")
+
+    # VISUALIZACIONES
     plt.figure(figsize=(10, 6))
     sns.histplot(df["log_views"], bins=50, kde=True)
     plt.title(f"Distribución logarítmica de vistas - {pais}")
@@ -76,7 +99,6 @@ for pais in file_paths:
     plt.tight_layout()
     plt.show()
 
-    # 2. Categorías más frecuentes
     plt.figure(figsize=(10, 6))
     sns.barplot(x=freq_cat.values, y=freq_cat.index, palette="viridis")
     plt.title(f"Top 10 categorías por cantidad de videos - {pais}")
@@ -85,7 +107,6 @@ for pais in file_paths:
     plt.tight_layout()
     plt.show()
 
-    # 3. Publicación por hora
     plt.figure(figsize=(10, 6))
     sns.countplot(x="publish_hour", data=df, palette="coolwarm")
     plt.title(f"Frecuencia de publicación por hora - {pais}")
