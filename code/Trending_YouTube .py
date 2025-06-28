@@ -38,6 +38,30 @@ for pais in file_paths:
     freq_cat = df["category_name"].value_counts().head(10)
     print("\n✔️ Tabla de frecuencia (categorías top 10):\n", freq_cat)
 
+    # VERIFICACIÓN DE CALIDAD DE LOS DATOS
+    print("\n🔍 VERIFICACIÓN DE CALIDAD")
+
+    # 1. Valores negativos
+    for col in ["views", "likes", "dislikes", "comment_count"]:
+        if (df[col] < 0).any():
+            print(f"⚠️ {col} contiene valores negativos")
+        else:
+            print(f"✔️ {col} no contiene valores negativos")
+
+    # 2. Lógica: comments_disabled = True → comment_count debe ser 0
+    inconsistentes_com = df[(df["comments_disabled"] == True) & (df["comment_count"] > 0)]
+    print(f"🔗 Inconsistencias comments_disabled: {len(inconsistentes_com)} registros")
+
+    # 3. Lógica: ratings_disabled = True → likes/dislikes deben ser 0
+    inconsistentes_rat = df[(df["ratings_disabled"] == True) & ((df["likes"] > 0) | (df["dislikes"] > 0))]
+    print(f"🔗 Inconsistencias ratings_disabled: {len(inconsistentes_rat)} registros")
+
+    # 4. Detección de outliers por encima del percentil 99.9
+    for col in ["views", "likes", "dislikes", "comment_count"]:
+        q999 = df[col].quantile(0.999)
+        outliers = df[df[col] > q999]
+        print(f"📈 {col}: {len(outliers)} registros sobre el p99.9")
+
     # VISUALIZACIÓN
     df["log_views"] = np.log1p(df["views"])
     df["publish_hour"] = pd.to_datetime(df["publish_time"], errors='coerce').dt.hour
@@ -46,7 +70,7 @@ for pais in file_paths:
     plt.figure(figsize=(10, 6))
     sns.histplot(df["log_views"], bins=50, kde=True)
     plt.title(f"Distribución logarítmica de vistas - {pais}")
-    plt.xlabel("Views + 1)")
+    plt.xlabel("log(views + 1)")
     plt.ylabel("Frecuencia")
     plt.grid(True)
     plt.tight_layout()
