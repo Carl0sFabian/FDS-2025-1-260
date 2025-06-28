@@ -39,7 +39,7 @@ for pais, csv_path in file_paths.items():
     plt.figure(figsize=(10, 6))
     sns.histplot(df["log_views"], bins=40, kde=True)
     plt.title(f"Distribución logarítmica de vistas - {pais}")
-    plt.xlabel("log(views + 1)")
+    plt.xlabel("Views + 1)")
     plt.ylabel("Frecuencia")
     plt.grid(True)
     plt.tight_layout()
