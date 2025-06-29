@@ -74,6 +74,24 @@ clean_path = "Programa/data_limpios/EEUU_limpio.csv"
 df.to_csv(clean_path, index=False)
 print(f"✅ Datos limpios guardados en: {clean_path}")
 
+# -------------------------
+# GUARDAR ESTADÍSTICAS
+# -------------------------
+stats = {
+    "total_rows":       int(df.shape[0]),
+    "total_views":      int(df["views"].sum()),
+    "total_likes":      int(df["likes"].sum()),
+    "total_dislikes":   int(df["dislikes"].sum()),
+    "total_comments":   int(df["comment_count"].sum())
+}
+# Ruta relativa a tu HTML (ajusta si es necesario)
+stats_path = "Programa/data_limpios/stats.json"
+with open(stats_path, "w", encoding="utf-8") as f:
+    json.dump(stats, f, ensure_ascii=False, indent=2)
+
+print(f"✅ Estadísticas guardadas en: {stats_path}")
+
+
 # ----------------------------------
 # GRÁFICOS RESPUESTAS P1 - P9
 # ----------------------------------
