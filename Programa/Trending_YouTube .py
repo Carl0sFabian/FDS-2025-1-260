@@ -190,3 +190,58 @@ plt.figure(figsize=(8,6))
 sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm")
 plt.title("9. Matriz de correlación entre Views, Likes, Dislikes y Comments")
 plt.tight_layout(); plt.show()
+
+# -------------------------
+# GUARDAR DATOS PARA GRÁFICO DE ESTADOS
+# -------------------------
+state_counts = df["state"].value_counts().sort_index()
+
+state_data = {
+    "labels": state_counts.index.tolist(),
+    "values": state_counts.values.tolist()
+}
+
+state_chart_path = "Programa/data_limpios/state_chart.json"
+with open(state_chart_path, "w", encoding="utf-8") as f:
+    json.dump(state_data, f, ensure_ascii=False, indent=2)
+
+print(f"✅ Gráfico de cantidad de estados guardado en: {state_chart_path}")
+
+# ----------------------------------
+# GUARDAR DATOS DE DISTRIBUCIÓN DE DTYPE
+# ----------------------------------
+
+dtype_counts = df.dtypes.value_counts().to_dict()
+dtype_data = {
+    "labels": [str(k) for k in dtype_counts.keys()],
+    "values": list(dtype_counts.values())
+}
+
+# Asegúrate de que la carpeta exista
+out_folder = "Programa/data_limpios"
+os.makedirs(out_folder, exist_ok=True)
+
+# Guardar JSON
+out_path = os.path.join(out_folder, "dtype_distribution.json")
+with open(out_path, "w", encoding="utf-8") as f:
+    json.dump(dtype_data, f, indent=2, ensure_ascii=False)
+
+print(f"✅ Distribución de dtypes guardada en: {out_path}")
+
+# -------------------------
+# GUARDAR TABLA DE FRECUENCIA TOP-10 EN JSON
+# -------------------------
+# freq_cat ya está definido como Series con index=category_name y values=conteos
+freq_data = {
+    "categories": freq_cat.index.tolist(),
+    "counts":     freq_cat.values.tolist()
+}
+
+out_folder = "Programa/data_limpios"
+os.makedirs(out_folder, exist_ok=True)
+
+freq_path = os.path.join(out_folder, "freq_cat.json")
+with open(freq_path, "w", encoding="utf-8") as f:
+    json.dump(freq_data, f, ensure_ascii=False, indent=2)
+
+print(f"✅ Tabla de frecuencia guardada en: {freq_path}")
