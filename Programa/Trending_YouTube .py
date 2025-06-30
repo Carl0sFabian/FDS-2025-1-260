@@ -84,7 +84,6 @@ stats = {
     "total_dislikes":   int(df["dislikes"].sum()),
     "total_comments":   int(df["comment_count"].sum())
 }
-# Ruta relativa a tu HTML (ajusta si es necesario)
 stats_path = "Programa/data_limpios/stats.json"
 with open(stats_path, "w", encoding="utf-8") as f:
     json.dump(stats, f, ensure_ascii=False, indent=2)

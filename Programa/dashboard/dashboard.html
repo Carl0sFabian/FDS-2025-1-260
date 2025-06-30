@@ -10,13 +10,27 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="style.css">
+    <!-- Three.js -->
+    <script src="https://unpkg.com/three@0.130.1/build/three.min.js"></script>
+    <!-- three-globe -->
+    <script src="https://unpkg.com/three-globe@2.24.11/build/three-globe.min.js"></script>
+    <!-- d3 para scale si fuera necesario -->
+    <script src="https://unpkg.com/d3@5"></script>
+
+    <!-- three.js core -->
+    <script src="https://unpkg.com/three@0.125.2/build/three.min.js"></script>
+    <!-- three-globe UMD -->
+    <script src="https://unpkg.com/three-globe"></script>
+    <!-- TrackballControls UMD -->
+    <script src="https://unpkg.com/three@0.125.2/examples/js/controls/TrackballControls.js"></script>
+
 </head>
 
 <body>
 
     <aside>
         <div class="logo">
-            <h2>T<span class="accent">You</span></h2>
+            <h2>T<span class="accent">YouTube</span></h2>
         </div>
         <nav>
             <div class="sidebar-item active" data-section="dashboard">
@@ -84,7 +98,12 @@
                     </div>
                     <span class="material-symbols-sharp hc-icon">chat_bubble</span>
                 </div>
+
             </div>
+
+            <!-- debajo de .highlights -->
+            <div id="globe-container"></div>
+
 
             <!-- Acerca de -->
             <div id="about" class="section">
@@ -138,7 +157,7 @@
 
         (async function () {
             try {
-                const resp = await fetch('Programa/data_limpios/stats.json');
+                const resp = await fetch('../data_limpios/stats.json');
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const stats = await resp.json();
 
@@ -171,6 +190,66 @@
                 console.error('No se pudieron cargar las estadísticas:', err);
             }
         })();
+
+        window.addEventListener('load', () => {
+            const container = document.getElementById('globe-container');
+
+            // 1. Renderer transparente
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.domElement.style.background = 'transparent';
+            container.appendChild(renderer.domElement);
+
+            // 2. Escena sin fondo
+            const scene = new THREE.Scene();
+            scene.background = null;
+
+            // 3. Cámara
+            const camera = new THREE.PerspectiveCamera(
+                40,
+                container.offsetWidth / container.offsetHeight,
+                0.1,
+                1000
+            );
+            camera.position.set(0, 0, 400);
+
+            // 4. Controles
+            const controls = new THREE.TrackballControls(camera, renderer.domElement);
+            controls.minDistance = 200;
+            controls.maxDistance = 600;
+
+            // 5. Globo
+            const Globe = new ThreeGlobe()
+                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+                .labelsData([{ lat: 37.09, lng: -95.71, size: 1.5, text: 'United States' }])
+                .labelLat(d => d.lat)
+                .labelLng(d => d.lng)
+                .labelText(d => d.text)
+                .labelSize(d => d.size)
+                .labelDotRadius(d => d.size)
+                .labelColor(() => 'orange');
+
+            // 6. Punto de vista centrado sin “altura” extra
+            Globe.pointOfView({ lat: 0, lng: 0, altitude: 3 }, 0);
+
+            scene.add(Globe);
+
+            // 7. Animación
+            (function animate() {
+                controls.update();
+                Globe.rotation.y += 0.0005;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            })();
+
+            // 8. Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+            });
+        });
+
     </script>
 
 
