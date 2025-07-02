@@ -1,21 +1,30 @@
-const sections = [
-    'home-content',
-    'section-1',
-    'section-2',
-    'section-3',
-    'section-4',
-    'section-5'
-];
 
-document.querySelectorAll('.nav li').forEach((item, index) => {
-    item.addEventListener('click', () => {
-        document.querySelectorAll('.nav li').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
-        sections.forEach((id, i) => {
-            document.getElementById(id).style.display = i === index ? 'block' : 'none';
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = [
+        'home-content',
+        'section-1',
+        'section-2',
+        'section-3',
+        'section-4',
+        'section-5'
+    ];
+
+    document.querySelectorAll('.nav li').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav li').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+            sections.forEach((id, i) => {
+                document.getElementById(id).style.display = i === index ? 'block' : 'none';
+            });
         });
     });
+
+    sections.forEach((id, i) => {
+        document.getElementById(id).style.display = i === 0 ? 'block' : 'none';
+    });
+
 });
+
 
 //Grafico de estados
 let chart;

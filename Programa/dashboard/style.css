@@ -325,3 +325,10 @@ body {
     background-color: #444;
     color: #fff;
 }
+
+.nav li.active {
+    color: #fff;
+    background-color: #2b2b3d;
+    border-radius: 10px;
+    padding: 6px;
+}

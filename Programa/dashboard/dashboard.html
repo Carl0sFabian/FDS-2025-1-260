@@ -19,12 +19,12 @@
             <div class="logo"></div>
             <nav class="nav">
                 <ul>
-                    <li class="active"><span class="icon">🏠</span></li>
-                    <li><span class="icon">❗</span></li>
-                    <li><span class="icon">🗃️</span></li>
-                    <li><span class="icon">📊</span></li>
-                    <li><span class="icon">📋</span></li>
-                    <li><span class="icon">↩</span></li>
+                    <li data-section="home-content"><span class="icon">🏠</span></li>
+                    <li data-section="section-1"><span class="icon">❗</span></li>
+                    <li data-section="section-2"><span class="icon">🗃️</span></li>
+                    <li data-section="section-3"><span class="icon">📊</span></li>
+                    <li data-section="section-4"><span class="icon">📋</span></li>
+                    <li data-section="section-5"><span class="icon">↩</span></li>
                 </ul>
             </nav>
         </aside>
@@ -46,9 +46,10 @@
 
             <h1>Hola, Carlos Fabian 👋</h1>
 
-
             <!-- Contenido por secciones -->
             <section id="home-content">
+
+                <!-- Seccion Principal -->
                 <section class="highlights">
                     <div class="highlight-card yellow">
                         <div class="hc-content">
@@ -82,6 +83,7 @@
                         <span class="hc-icon">💬</span>
                     </div>
                 </section>
+
 
                 <section style="display: flex; flex-direction: row; align-items: flex-start; gap: 20px; width: 100%;">
 
@@ -327,44 +329,46 @@
 
                 </section>
 
-                <section id="section-1" style="display:none">
-                    <div class="card card-dark">
-                        <h4>Sección ❗</h4>
-                        <p class="value">Sin contenido aún</p>
-                    </div>
-                </section>
+            </section>
 
-                <section id="section-2" style="display:none">
-                    <div class="card card-dark">
-                        <h4>Sección 🗃️</h4>
-                        <p class="value">Sin contenido aún</p>
-                    </div>
-                </section>
+            <!-- Secciones -->
+            <section id="section-1" style="display:none">
+                <div class="card card-dark">
+                    <h4>Sección ❗</h4>
+                    <p class="value">Sin contenido aún</p>
+                </div>
+            </section>
 
-                <section id="section-3" style="display:none">
-                    <div class="card card-dark">
-                        <h4>Sección 📊</h4>
-                        <p class="value">Sin contenido aún</p>
-                    </div>
-                </section>
+            <section id="section-2" style="display:none">
+                <div class="card card-dark">
+                    <h4>Sección 🗃️</h4>
+                    <p class="value">Sin contenido aún</p>
+                </div>
+            </section>
 
-                <section id="section-4" style="display:none">
-                    <div class="card card-dark">
-                        <h4>Sección 📋</h4>
-                        <p class="value">Sin contenido aún</p>
-                    </div>
-                </section>
+            <section id="section-3" style="display:none">
+                <div class="card card-dark">
+                    <h4>Sección 📊</h4>
+                    <p class="value">Sin contenido aún</p>
+                </div>
+            </section>
 
-                <section id="section-5" style="display:none">
-                    <div class="card card-dark">
-                        <h4>Sección ↩</h4>
-                        <p class="value">Sin contenido aún</p>
-                    </div>
-                </section>
+            <section id="section-4" style="display:none">
+                <div class="card card-dark">
+                    <h4>Sección 📋</h4>
+                    <p class="value">Sin contenido aún</p>
+                </div>
+            </section>
+
+            <section id="section-5" style="display:none">
+                <div class="card card-dark">
+                    <h4>Sección ↩</h4>
+                    <p class="value">Sin contenido aún</p>
+                </div>
+            </section>
         </main>
     </div>
+    <script src="script.js"></script>
 </body>
-
-<script src="script.js"></script>
 
 </html>
