@@ -1,245 +1,370 @@
-</html>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trending YouTube</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <title>Sales Dashboard - Figma Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"></div>
+            <nav class="nav">
+                <ul>
+                    <li class="active"><span class="icon">🏠</span></li>
+                    <li><span class="icon">❗</span></li>
+                    <li><span class="icon">🗃️</span></li>
+                    <li><span class="icon">📊</span></li>
+                    <li><span class="icon">📋</span></li>
+                    <li><span class="icon">↩</span></li>
+                </ul>
+            </nav>
+        </aside>
 
-    <aside>
-        <div class="logo">
-            <h2>T<span class="accent">YouTube</span></h2>
-        </div>
-        <nav>
-            <div class="sidebar-item active" data-section="dashboard">
-                <span class="material-symbols-sharp">grid_view</span>
-                <h3>Dashboard</h3>
-            </div>
-            <div class="sidebar-item" data-section="about">
-                <span class="material-symbols-sharp">info</span>
-                <h3>Acerca de</h3>
-            </div>
-            <div class="sidebar-item" data-section="database">
-                <span class="material-symbols-sharp">database</span>
-                <h3>Data Base</h3>
-            </div>
-            <div class="sidebar-item" data-section="analytics">
-                <span class="material-symbols-sharp">insights</span>
-                <h3>Analytics</h3>
-            </div>
-            <div class="sidebar-item" data-section="reports">
-                <span class="material-symbols-sharp">description</span>
-                <h3>Reportes</h3>
-            </div>
-            <div class="sidebar-item" data-section="logout">
-                <span class="material-symbols-sharp">logout</span>
-                <h3>Log Out</h3>
-            </div>
-        </nav>
-    </aside>
-
-    <main>
-        <!-- Dashboard -->
-        <div id="dashboard" class="section active">
-            <h2>Bienvenido al Dashboard</h2>
-            <p>Contenido principal de la sección Dashboard.</p>
-
-            <div class="highlights">
-                <div class="highlight-card yellow">
-                    <div class="hc-content">
-                        <span id="stat-rows" class="hc-value">--</span>
-                        <span class="hc-label">Total registros</span>
-                    </div>
-                    <span class="material-symbols-sharp hc-icon">storage</span>
+        <main class="main">
+            <header class="topbar">
+                <div class="search">
+                    <input type="text" placeholder="Search here..." />
                 </div>
-
-                <div class="highlight-card blue" id="reactions-card">
-                    <div class="hc-content">
-                        <span id="stat-likes" class="hc-value">--</span>
-                        <span class="hc-label">Likes</span>
+                <div class="dashboard-title">Trending YouTube</div>
+                <div class="user-info">
+                    <div class="user-text">
+                        <div class="name">Carlos Fabian</div>
+                        <div class="email">U20231c416@upc.edu.pe</div>
                     </div>
-                    <span id="reactions-icon" class="material-symbols-sharp hc-icon">thumb_up</span>
+                    <div class="avatar">👦🏻</div>
                 </div>
+            </header>
 
-                <div class="highlight-card green">
-                    <div class="hc-content">
-                        <span id="stat-views" class="hc-value">--</span>
-                        <span class="hc-label">Vistas</span>
+            <h1>Hola, Carlos Fabian 👋</h1>
+
+
+            <!-- Contenido por secciones -->
+            <section id="home-content">
+                <section class="highlights">
+                    <div class="highlight-card yellow">
+                        <div class="hc-content">
+                            <span id="stat-rows" class="hc-value">--</span>
+                            <span class="hc-label">Total registros</span>
+                        </div>
+                        <span class="hc-icon">💾</span>
                     </div>
-                    <span class="material-symbols-sharp hc-icon">visibility</span>
-                </div>
 
-                <div class="highlight-card pink">
-                    <div class="hc-content">
-                        <span id="stat-comments" class="hc-value">--</span>
-                        <span class="hc-label">Comentarios</span>
+                    <div class="highlight-card blue" id="reactions-card">
+                        <div class="hc-content">
+                            <span id="stat-likes" class="hc-value">--</span>
+                            <span class="hc-label">Likes</span>
+                        </div>
+                        <span id="reactions-icon" class="hc-icon">👍</span>
                     </div>
-                    <span class="material-symbols-sharp hc-icon">chat_bubble</span>
-                </div>
 
-            </div>
+                    <div class="highlight-card green">
+                        <div class="hc-content">
+                            <span id="stat-views" class="hc-value">--</span>
+                            <span class="hc-label">Vistas</span>
+                        </div>
+                        <span class="hc-icon">👁️</span>
+                    </div>
 
-            <!-- Acerca de -->
-            <div id="about" class="section">
-                <h2>Acerca de</h2>
-                <p>Información sobre la aplicación.</p>
-            </div>
+                    <div class="highlight-card pink">
+                        <div class="hc-content">
+                            <span id="stat-comments" class="hc-value">--</span>
+                            <span class="hc-label">Comentarios</span>
+                        </div>
+                        <span class="hc-icon">💬</span>
+                    </div>
+                </section>
 
-            <!-- Data Base -->
-            <div id="database" class="section">
-                <h2>Data Base</h2>
-                <p>Aquí iría tu visor de CSV/JSON.</p>
-            </div>
+                <section style="display: flex; flex-direction: row; align-items: flex-start; gap: 20px; width: 100%;">
 
-            <!-- Analytics -->
-            <div id="analytics" class="section">
-                <h2>Analytics</h2>
-                <p>Gráficos y análisis de datos.</p>
-            </div>
+                    <!-- COLUMNA IZQUIERDA -->
+                    <div style="display: flex; flex-direction: column; gap: 20px; flex: 1;">
+                        <div style="display: flex; flex-direction: row; gap: 20px;">
+                            <!-- GRÁFICO -->
+                            <div class="card card-dark"
+                                style="height: 240px; width: 500px; padding: 20px; border-radius: 20px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 20px; gap: 45px;">
+                                    <h4>Videos por Estado</h4>
+                                    <select id="estadoSelector" class="custom-select"></select>
+                                    <button id="downloadChart"
+                                        style="padding:6px 12px; background:#ffd600; border:none; border-radius:6px; color:#000; cursor:pointer;">
+                                        ⬇️ Download
+                                    </button>
+                                </div>
+                                <canvas id="stateChart" width="590" height="200"></canvas>
+                            </div>
 
-            <!-- Reportes -->
-            <div id="reports" class="section">
-                <h2>Reportes</h2>
-                <p>Descarga de reportes PDF/PPT.</p>
-            </div>
+                            <!-- CARD ESTADOS UNIDOS -->
+                            <div class="card card-dark"
+                                style="height: 240px; width: 300px; padding: 20px; border-radius: 20px;">
+                                <h4>Descripción Estados Unidos</h4>
+                                <p style="font-size: 14px; color: #ccc;"></p>
+                                <img src="/img/EEUU.png">
+                            </div>
+                        </div>
 
-            <!-- Log Out -->
-            <div id="logout" class="section">
-                <h2>Log Out</h2>
-                <p>¿Seguro que deseas cerrar sesión?</p>
-            </div>
-    </main>
-    <!-- LIBRERÍAS Three.js al final del body -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.139.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.139.2/examples/js/controls/OrbitControls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three-globe@2.27.1/dist/three-globe.min.js"></script>
+                        <!-- CARDS HORIZONTALES -->
+                        <div class="cards" style="display: flex; gap: 20px;">
+                            <div class="card card-dark" style="flex: 1;">
+                                <span style="font-size: 16px; font-weight: 600;">Publicaciones por Año</span>
+                                <button id="downloadPubChart"
+                                    style="padding:6px 12px; background:#ffd600; border:none; border-radius:6px; color:#000; cursor:pointer;">
+                                    ⬇️ Download
+                                </button>
+                                <canvas id="pubChart" width="500" height="300"></canvas>
+                            </div>
 
-    <script>
-        (function () {
-            const sidebarItems = document.querySelectorAll('.sidebar-item');
-            const pageSections = document.querySelectorAll('.section');
+                            <div class="card card-dark" id="freq-card">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <h4 style="margin:0;">Tabla de Frecuencia</h4>
+                                    <div>
+                                        <button id="filter-btn"
+                                            style="margin-right:8px; padding:6px 12px; background:#444; border:none; border-radius:6px; color:#fff; cursor:pointer;">
+                                            ▼ Filter
+                                        </button>
+                                        <button id="download-btn"
+                                            style="padding:6px 12px; background:#ffd600; border:none; border-radius:6px; color:#000; cursor:pointer;">
+                                            ⬇️ Download
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="text" id="freq-filter" placeholder="Filtrar categoría…"
+                                    style="display:none; width:100%; padding:8px; margin-bottom:10px; border-radius:6px; border:1px solid #555; background:#2b2b3d; color:#fff;" />
+                                <div class="scroll-boxT">
+                                    <div id="freq-table" style="height: 200;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            sidebarItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    sidebarItems.forEach(i => i.classList.remove('active'));
-                    pageSections.forEach(s => s.classList.remove('active'));
+                    <!-- COLUMNA DERECHA: CARD-VERTICAL -->
+                    <div class="card-vertical">
+                        <h4 style="align-self: flex-start;">Tipos de columnas</h4>
+                        <canvas id="dtypePieChart" width="280px" height="280px"></canvas>
 
-                    item.classList.add('active');
+                        <hr class="divider" />
 
-                    const targetId = item.getAttribute('data-section');
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) targetSection.classList.add('active');
-                });
-            });
-        })();
+                        <h4 style="align-self: flex-start;">Valores Únicos por Columna</h4>
+                        <div class="scroll-box">
+                            <div class="progress-stat">
+                                <div class="label">Views</div>
+                                <div class="value">40478</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 100%;"></div>
+                                </div>
+                            </div>
 
-        (async function () {
-            try {
-                const resp = await fetch('../data_limpios/stats.json');
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                const stats = await resp.json();
+                            <div class="progress-stat">
+                                <div class="label">Likes</div>
+                                <div class="value">29850</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 73.7%;"></div>
+                                </div>
+                            </div>
 
-                document.getElementById('stat-rows').textContent =
-                    stats.total_rows.toLocaleString();
+                            <div class="progress-stat">
+                                <div class="label">Comment_count</div>
+                                <div class="value">13773</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 34.0%;"></div>
+                                </div>
+                            </div>
 
-                const likesEl = document.getElementById('stat-likes');
-                const iconEl = document.getElementById('reactions-icon');
-                let showingLike = true;
-                likesEl.textContent = stats.total_likes.toLocaleString();
+                            <div class="progress-stat">
+                                <div class="label">Dislikes</div>
+                                <div class="value">8516</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 21.0%;"></div>
+                                </div>
+                            </div>
 
-                setInterval(() => {
-                    if (showingLike) {
-                        iconEl.textContent = 'thumb_down';
-                        likesEl.textContent = stats.total_dislikes.toLocaleString();
-                    } else {
-                        iconEl.textContent = 'thumb_up';
-                        likesEl.textContent = stats.total_likes.toLocaleString();
-                    }
-                    showingLike = !showingLike;
-                }, 5000);
+                            <div class="progress-stat">
+                                <div class="label">Description</div>
+                                <div class="value">6901</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 17.0%;"></div>
+                                </div>
+                            </div>
 
-                document.getElementById('stat-views').textContent =
-                    stats.total_views.toLocaleString();
+                            <div class="progress-stat">
+                                <div class="label">Title</div>
+                                <div class="value">6455</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 15.9%;"></div>
+                                </div>
+                            </div>
 
-                document.getElementById('stat-comments').textContent =
-                    stats.total_comments.toLocaleString();
+                            <div class="progress-stat">
+                                <div class="label">Thumbnail_link</div>
+                                <div class="value">6352</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 15.7%;"></div>
+                                </div>
+                            </div>
 
-            } catch (err) {
-                console.error('No se pudieron cargar las estadísticas:', err);
-            }
-        })();
+                            <div class="progress-stat">
+                                <div class="label">Video_id</div>
+                                <div class="value">6351</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 15.7%;"></div>
+                                </div>
+                            </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera();
-            camera.aspect = window.innerWidth / 500;
-            camera.updateProjectionMatrix();
-            camera.position.z = 250;
+                            <div class="progress-stat">
+                                <div class="label">Publish_time</div>
+                                <div class="value">6269</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 15.4%;"></div>
+                                </div>
+                            </div>
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, 500);
-            document.getElementById('globe-container').appendChild(renderer.domElement);
+                            <div class="progress-stat">
+                                <div class="label">Tags</div>
+                                <div class="value">6055</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 14.95%;"></div>
+                                </div>
+                            </div>
 
-            const controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableZoom = false;
-            controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.3;
+                            <div class="progress-stat">
+                                <div class="label">Channel_title</div>
+                                <div class="value">2207</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 5.4%;"></div>
+                                </div>
+                            </div>
 
-            // Luz
-            scene.add(new THREE.AmbientLight(0xbbbbbb));
-            const light = new THREE.DirectionalLight(0xffffff, 0.6);
-            light.position.set(1, 1, 1);
-            scene.add(light);
+                            <div class="progress-stat">
+                                <div class="label">Trending_date</div>
+                                <div class="value">205</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.5%;"></div>
+                                </div>
+                            </div>
 
-            // Crear el globo
-            const globe = new ThreeGlobe()
-                .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
-                .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png');
+                            <div class="progress-stat">
+                                <div class="label">State</div>
+                                <div class="value">50</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.12%;"></div>
+                                </div>
+                            </div>
 
-            scene.add(globe);
+                            <div class="progress-stat">
+                                <div class="label">Geometry</div>
+                                <div class="value">50</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.12%;"></div>
+                                </div>
+                            </div>
 
-            // Posicionar cámara mirando a EE.UU.
-            const lat = 38.8833;
-            const lon = -77.0167;
-            const phi = (90 - lat) * Math.PI / 180;
-            const theta = (lon + 180) * Math.PI / 180;
-            const radius = 150;
+                            <div class="progress-stat">
+                                <div class="label">Lat</div>
+                                <div class="value">46</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.11%;"></div>
+                                </div>
+                            </div>
 
-            const x = -radius * Math.sin(phi) * Math.cos(theta);
-            const y = radius * Math.cos(phi);
-            const z = radius * Math.sin(phi) * Math.sin(theta);
+                            <div class="progress-stat">
+                                <div class="label">Lon</div>
+                                <div class="value">46</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.11%;"></div>
+                                </div>
+                            </div>
 
-            camera.position.set(x, y, z);
-            camera.lookAt(globe.position);
+                            <div class="progress-stat">
+                                <div class="label">Category_id</div>
+                                <div class="value">16</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.04%;"></div>
+                                </div>
+                            </div>
 
-            // Animación
-            const animate = () => {
-                requestAnimationFrame(animate);
-                controls.update();
-                renderer.render(scene, camera);
-            };
+                            <div class="progress-stat">
+                                <div class="label">Category_name</div>
+                                <div class="value">16</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.04%;"></div>
+                                </div>
+                            </div>
 
-            animate();
+                            <div class="progress-stat">
+                                <div class="label">Comments_disabled</div>
+                                <div class="value">2</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.0049%;"></div>
+                                </div>
+                            </div>
 
-            // Ajuste responsive
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / 500;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, 500);
-            });
-        });
-    </script>
+                            <div class="progress-stat">
+                                <div class="label">Ratings_disabled</div>
+                                <div class="value">2</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.0049%;"></div>
+                                </div>
+                            </div>
 
+                            <div class="progress-stat">
+                                <div class="label">Video_error_or_removed</div>
+                                <div class="value">2</div>
+                                <div class="progress-bar">
+                                    <div class="fill" style="width: 0.0049%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                </section>
+
+                <section id="section-1" style="display:none">
+                    <div class="card card-dark">
+                        <h4>Sección ❗</h4>
+                        <p class="value">Sin contenido aún</p>
+                    </div>
+                </section>
+
+                <section id="section-2" style="display:none">
+                    <div class="card card-dark">
+                        <h4>Sección 🗃️</h4>
+                        <p class="value">Sin contenido aún</p>
+                    </div>
+                </section>
+
+                <section id="section-3" style="display:none">
+                    <div class="card card-dark">
+                        <h4>Sección 📊</h4>
+                        <p class="value">Sin contenido aún</p>
+                    </div>
+                </section>
+
+                <section id="section-4" style="display:none">
+                    <div class="card card-dark">
+                        <h4>Sección 📋</h4>
+                        <p class="value">Sin contenido aún</p>
+                    </div>
+                </section>
+
+                <section id="section-5" style="display:none">
+                    <div class="card card-dark">
+                        <h4>Sección ↩</h4>
+                        <p class="value">Sin contenido aún</p>
+                    </div>
+                </section>
+        </main>
+    </div>
 </body>
+
+<script src="script.js"></script>
 
 </html>

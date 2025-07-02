@@ -231,7 +231,6 @@ print(f"✅ Distribución de dtypes guardada en: {out_path}")
 # -------------------------
 # GUARDAR TABLA DE FRECUENCIA TOP-10 EN JSON
 # -------------------------
-# freq_cat ya está definido como Series con index=category_name y values=conteos
 freq_data = {
     "categories": freq_cat.index.tolist(),
     "counts":     freq_cat.values.tolist()
@@ -245,3 +244,30 @@ with open(freq_path, "w", encoding="utf-8") as f:
     json.dump(freq_data, f, ensure_ascii=False, indent=2)
 
 print(f"✅ Tabla de frecuencia guardada en: {freq_path}")
+
+
+# -------------------------
+# GUARDAR PUBLICACIONES POR AÑO
+# -------------------------
+df["publish_time"] = pd.to_datetime(df["publish_time"], errors="coerce")
+df["publish_year"] = df["publish_time"].dt.year
+
+yearly_stats = df.groupby("publish_year").agg({
+    "video_id": "count",
+    "views": "mean"
+}).rename(columns={"video_id": "count_videos", "views": "avg_views"}).dropna()
+
+yearly_stats = yearly_stats.sort_index()
+
+pub_years_data = {
+    "labels": yearly_stats.index.astype(str).tolist(),
+    "values": yearly_stats["count_videos"].astype(int).tolist(),
+    "avg_views": yearly_stats["avg_views"].round(0).astype(int).tolist()
+}
+
+pub_path = "Programa/data_limpios/pub_years.json"
+with open(pub_path, "w", encoding="utf-8") as f:
+    json.dump(pub_years_data, f, ensure_ascii=False, indent=2)
+
+print(f"✅ Datos de publicaciones por año guardados en: {pub_path}")
+
