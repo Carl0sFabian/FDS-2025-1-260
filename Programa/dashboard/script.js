@@ -385,7 +385,7 @@ function updatePieChart(key) {
 }
 
 sel.addEventListener("change", () => {
-    const val = sel.value;             
+    const val = sel.value;
     img.src = `/Programa/static/images/p${val}.png`;
     img.alt = `Gráfico Pregunta ${val}`;
     updateDataTable(val);
@@ -407,3 +407,68 @@ img.alt = `Gráfico Pregunta ${sel.value}`;
 updateDataTable(sel.value);
 updatePieChart(sel.value);
 
+fetch('../data_limpios/EEUU_limpio.csv')
+    .then(res => res.text())
+    .then(text => {
+        const lines = text.split('\n').filter(l => l.trim());
+        const headers = lines[0].split(',');
+        const container = document.getElementById('csvTableContainer');
+
+        const table = document.createElement('table');
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+        table.style.fontSize = '12px';
+        table.style.color = '#fff';
+
+        const thead = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        headers.forEach(h => {
+            const th = document.createElement('th');
+            th.textContent = h;
+            th.style.padding = '6px';
+            th.style.borderBottom = '1px solid #444';
+            th.style.background = '#2b2b3d';
+            th.style.position = 'sticky';
+            th.style.top = '0';
+            headRow.appendChild(th);
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        lines.slice(1, 6).forEach(line => {
+            const tr = document.createElement('tr');
+            line.split(',').forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                td.style.padding = '4px';
+                td.style.borderBottom = '1px solid #333';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        container.appendChild(table);
+    })
+    .catch(err => {
+        document.getElementById('csvTableContainer')
+            .textContent = 'No se pudo cargar el CSV.';
+        console.error(err);
+    });
+
+fetch('../data/US_category_id.json')
+  .then(res => {
+    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+    return res.json();
+  })
+  .then(data => {
+    const pretty = JSON.stringify(data, null, 2);
+    const pre = document.getElementById('jsonContainer');
+    pre.textContent = pretty;
+  })
+  .catch(err => {
+    const pre = document.getElementById('jsonContainer');
+    pre.textContent = '❌ No se pudo cargar el JSON.';
+    console.error(err);
+  });
