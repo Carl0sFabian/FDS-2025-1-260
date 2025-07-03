@@ -109,7 +109,7 @@
                                 style="height: 240px; width: 300px; padding: 20px; border-radius: 20px;">
                                 <h4>Descripción Estados Unidos</h4>
                                 <p style="font-size: 14px; color: #ccc;"></p>
-                                <img src="/img/EEUU.png">
+                                <img src="/Programa/static/images/EEUU.png">
                             </div>
                         </div>
 
@@ -331,32 +331,97 @@
 
             </section>
 
-            <!-- Secciones -->
+            <!-- Seccion Acerca de -->
             <section id="section-1" style="display:none">
                 <div class="card card-dark">
                     <h4>Sección ❗</h4>
-                    <p class="value">Sin contenido aún</p>
+                    <p class="value">Acerca de</p>
                 </div>
             </section>
-
+            <!-- Seccion Data base -->
             <section id="section-2" style="display:none">
                 <div class="card card-dark">
                     <h4>Sección 🗃️</h4>
-                    <p class="value">Sin contenido aún</p>
+                    <p class="value">Data Base</p>
                 </div>
             </section>
 
-            <section id="section-3" style="display:none">
-                <div class="card card-dark">
-                    <h4>Sección 📊</h4>
-                    <p class="value">Sin contenido aún</p>
+            <!-- Seccion Graficos -->
+            <section id="section-3" class="section" style="display:none;">
+                <div class="cards" style="gap:20px; margin-bottom:20px;">
+                    <div class="card card-dark"
+                        style="flex:2; display:flex; flex-direction:column; border-radius:16px; padding:20px;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                            <h4 style="color:#fff; margin:0;">Eliga la pregunta a graficar</h4>
+                            <select id="timeframe"
+                                style="padding:4px 8px; border-radius:6px; border:none; background:#444; color:#fff;">
+                                <option value="1">Pregunta 1</option>
+                                <option value="2a">Pregunta 2a</option>
+                                <option value="2b">Pregunta 2b</option>
+                                <option value="3">Pregunta 3</option>
+                                <option value="4">Pregunta 4</option>
+                                <option value="5">Pregunta 5</option>
+                                <option value="6a">Pregunta 6a</option>
+                                <option value="6b">Pregunta 6b</option>
+                                <option value="7">Pregunta 7</option>
+                                <option value="8">Pregunta 8</option>
+                                <option value="9">Pregunta 9</option>
+                            </select>
+                        </div>
+                        <img id="chartImage" src="/Programa/static/images/p1.png" alt="Gráfico Pregunta 1"
+                            style="width:100%; height:auto; border-radius:8px;" />
+
+                    </div>
+                    <div class="card card-dark"
+                        style="flex:1; border-radius:16px; padding:20px; display:flex; flex-direction:column; justify-content:center; align-items:center; background:#2b2b3d;">
+                        <div style="font-size:14px; color:#aaa; margin-bottom:8px;">Insights del grafico que salga xd
+                        </div>
+                    </div>
                 </div>
+                <div class="cards" style="gap:20px;">
+
+                    <!-- CARD DE DATOS USADOS -->
+                    <div class="card card-dark" style="flex:2; border-radius:16px; padding:20px; background:#2b2b3d;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <h4 style="color:#fff; margin:0;">Datos que se utilizaron</h4>
+                            <button id="downloadDataBtn" style="padding:6px 12px; border:none; border-radius:6px;
+                     background:#ffd600; color:#000; cursor:pointer;">
+                                ⬇️ Descargar
+                            </button>
+                        </div>
+                        <div style="overflow:auto; max-height:200px;">
+                            <table id="dataTable"
+                                style="width:100%; border-collapse:collapse; color:#fff; font-size:14px;">
+                                <thead>
+                                    <tr>
+                                        <th style="border:1px solid #555; padding:8px; background:#444;">Columna</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- CARD DEL GRÁFICO CIRCULAR DE CANTIDADES -->
+                    <div class="card card-dark" style="flex:1; border-radius:16px; padding:20px; background:#2b2b3d;
+              display:flex; flex-direction:column; align-items:center;">
+                        <h4 style="color:#fff; margin-bottom:12px;">
+                            Distribución de columnas usadas
+                        </h4>
+                        <canvas id="downloadsChart" width="200" height="200"></canvas>
+                    </div>
+
+                </div>
+
             </section>
+
 
             <section id="section-4" style="display:none">
                 <div class="card card-dark">
                     <h4>Sección 📋</h4>
-                    <p class="value">Sin contenido aún</p>
+                    <p class="value">Reporte</p>
                 </div>
             </section>
 

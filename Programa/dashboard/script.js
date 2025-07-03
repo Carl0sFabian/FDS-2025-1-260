@@ -335,3 +335,75 @@ document.getElementById("downloadPubChart").addEventListener("click", () => {
     link.download = "publicaciones_por_anio.png";
     link.click();
 });
+const sel = document.getElementById("timeframe");
+const img = document.getElementById("chartImage");
+const tbody = document.querySelector('#dataTable tbody');
+const downloadBtn = document.getElementById("downloadDataBtn");
+const pieCtx = document.getElementById("downloadsChart").getContext("2d");
+
+const columnsMap = {
+    '1': ['category_name'],
+    '2': ['category_name', 'likes'],
+    '3': ['category_name', 'likes', 'dislikes'],
+    '4': ['category_name', 'views', 'comment_count'],
+    '5': ['trending_date_dt'],
+    '6a': ['channel_title'],
+    '6b': ['channel_title'],
+    '7': ['state', 'views', 'likes', 'dislikes', 'lat', 'lon'],
+    '8': ['title', 'comment_count'],
+    '9': ['views', 'likes', 'dislikes', 'comment_count']
+};
+
+function updateDataTable(key) {
+    const cols = columnsMap[key] || [];
+    tbody.innerHTML = '';
+    cols.forEach(col => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="border:1px solid #555; padding:8px;">${col}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+let pieChart;
+function updatePieChart(key) {
+    const cols = columnsMap[key] || [];
+    const data = cols.map(() => 1);
+    const colors = ['#4bc0c0', '#ff6384', '#ffce56', '#36a2eb', '#9966ff', '#ff9f40'];
+
+    if (pieChart) pieChart.destroy();
+    pieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: cols,
+            datasets: [{ data, backgroundColor: colors.slice(0, cols.length) }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#ccc' } } }
+        }
+    });
+}
+
+sel.addEventListener("change", () => {
+    const val = sel.value;             
+    img.src = `/Programa/static/images/p${val}.png`;
+    img.alt = `Gráfico Pregunta ${val}`;
+    updateDataTable(val);
+    updatePieChart(val);
+});
+
+downloadBtn.addEventListener("click", () => {
+    const cols = columnsMap[sel.value] || [];
+    const csv = "Columna\n" + cols.join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `pregunta_${sel.value}_datos.csv`;
+    a.click();
+});
+
+img.src = `/Programa/static/images/p${sel.value}.png`;
+img.alt = `Gráfico Pregunta ${sel.value}`;
+updateDataTable(sel.value);
+updatePieChart(sel.value);
+

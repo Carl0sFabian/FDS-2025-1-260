@@ -27,7 +27,7 @@ body {
     background-color: #fbfafd;
     border-radius: 50%;
     margin-bottom: 30px;
-    background-image: url('/img/Upc.png');
+    background-image: url('/Programa/static/images/Upc.png');
     background-size: 24px 24px;
     background-repeat: no-repeat;
     background-position: center;

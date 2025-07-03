@@ -91,6 +91,10 @@ with open(stats_path, "w", encoding="utf-8") as f:
 print(f"✅ Estadísticas guardadas en: {stats_path}")
 
 
+# -------------------------
+image_folder = "Programa/static/images"
+os.makedirs(image_folder, exist_ok=True)
+
 # ----------------------------------
 # GRÁFICOS RESPUESTAS P1 - P9
 # ----------------------------------
@@ -101,59 +105,92 @@ plt.figure(figsize=(10,6))
 sns.barplot(x=cat_counts.values, y=cat_counts.index, palette="viridis")
 plt.title("1. Categorías con mayor número de videos en tendencia")
 plt.xlabel("Cantidad de videos"); plt.ylabel("Categoría")
-plt.tight_layout(); plt.show()
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p1.png"), bbox_inches="tight")
+plt.show()
 
-# 2. Más y menos gustadas
+# 2a. Top 10 categorías con más likes promedio
 likes_cat = df.groupby("category_name")["likes"].mean().sort_values()
 plt.figure(figsize=(10,6))
 sns.barplot(x=likes_cat.values[-10:], y=likes_cat.index[-10:], palette="Blues_r")
 plt.title("2a. Top 10 categorías con más likes promedio")
-plt.xlabel("Likes promedio"); plt.tight_layout(); plt.show()
+plt.xlabel("Likes promedio")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p2a.png"), bbox_inches="tight")
+plt.show()
 
+# 2b. Top 10 categorías con menos likes promedio
 plt.figure(figsize=(10,6))
 sns.barplot(x=likes_cat.values[:10], y=likes_cat.index[:10], palette="Reds_r")
 plt.title("2b. Top 10 categorías con menos likes promedio")
-plt.xlabel("Likes promedio"); plt.tight_layout(); plt.show()
+plt.xlabel("Likes promedio")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p2b.png"), bbox_inches="tight")
+plt.show()
 
 # 3. Ratio Likes/Dislikes
 df["ratio_likes_dislikes"] = df["likes"] / (df["dislikes"] + 1)
-ratio_ld = df.groupby("category_name")["ratio_likes_dislikes"]\
-             .mean().dropna().sort_values(ascending=False).head(10)
+ratio_ld = (
+    df.groupby("category_name")["ratio_likes_dislikes"]
+      .mean().dropna()
+      .sort_values(ascending=False)
+      .head(10)
+)
 plt.figure(figsize=(10,6))
 sns.barplot(x=ratio_ld.values, y=ratio_ld.index, palette="magma")
 plt.title("3. Top 10 categorías con mejor ratio Likes/Dislikes")
-plt.xlabel("Ratio promedio"); plt.tight_layout(); plt.show()
+plt.xlabel("Ratio promedio")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p3.png"), bbox_inches="tight")
+plt.show()
 
 # 4. Ratio Views/Comments
 df["ratio_views_comments"] = df["views"] / (df["comment_count"] + 1)
-ratio_vc = df.groupby("category_name")["ratio_views_comments"]\
-             .mean().dropna().sort_values(ascending=False).head(10)
+ratio_vc = (
+    df.groupby("category_name")["ratio_views_comments"]
+      .mean().dropna()
+      .sort_values(ascending=False)
+      .head(10)
+)
 plt.figure(figsize=(10,6))
 sns.barplot(x=ratio_vc.values, y=ratio_vc.index, palette="cividis")
 plt.title("4. Top 10 categorías con mejor ratio Views/Comments")
-plt.xlabel("Ratio promedio"); plt.tight_layout(); plt.show()
+plt.xlabel("Ratio promedio")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p4.png"), bbox_inches="tight")
+plt.show()
 
-# 5. Volumen de videos por fecha
+# 5. Evolución de videos en tendencia por fecha
 trend_counts = df["trending_date_dt"].value_counts().sort_index()
 plt.figure(figsize=(12,6))
 trend_counts.plot()
 plt.title("5. Evolución de videos en tendencia por fecha")
 plt.xlabel("Fecha"); plt.ylabel("Cantidad de videos")
-plt.grid(True); plt.tight_layout(); plt.show()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p5.png"), bbox_inches="tight")
+plt.show()
 
-# 6. Canales más y menos frecuentes
+# 6a. Top 10 canales con más tendencias
 chan_counts = df["channel_title"].value_counts()
 plt.figure(figsize=(10,6))
 sns.barplot(x=chan_counts.values[:10], y=chan_counts.index[:10], palette="crest")
 plt.title("6a. Top 10 canales con más tendencias")
-plt.xlabel("Cantidad"); plt.tight_layout(); plt.show()
+plt.xlabel("Cantidad")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p6a.png"), bbox_inches="tight")
+plt.show()
 
+# 6b. Top 10 canales con menos tendencias
 plt.figure(figsize=(10,6))
 sns.barplot(x=chan_counts.values[-10:], y=chan_counts.index[-10:], palette="flare")
 plt.title("6b. Top 10 canales con menos tendencias")
-plt.xlabel("Cantidad"); plt.tight_layout(); plt.show()
+plt.xlabel("Cantidad")
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p6b.png"), bbox_inches="tight")
+plt.show()
 
-# 7. Mapa de Vistas, Likes y Dislikes por Estado
+# 7. Mapa de Vistas, Likes y Dislikes por Estado (Plotly)
 state_summary = df.groupby("state").agg({
     "views":    "sum",
     "likes":    "sum",
@@ -161,7 +198,6 @@ state_summary = df.groupby("state").agg({
     "lat":      "mean",
     "lon":      "mean"
 }).reset_index()
-
 fig = px.scatter_mapbox(
     state_summary,
     lat="lat", lon="lon",
@@ -174,22 +210,29 @@ fig = px.scatter_mapbox(
 )
 fig.update_layout(mapbox_style="carto-positron",
                   margin={"r":0,"t":50,"l":0,"b":0})
+fig.write_image(os.path.join(image_folder, "p7.png"))
 fig.show()
 
-# 8. Top 10 videos con más comentarios
+# 8. Top 10 Videos con más comentarios
 top_com = df.sort_values("comment_count", ascending=False).head(10)
 plt.figure(figsize=(10,6))
 sns.barplot(y="title", x="comment_count", data=top_com, palette="rocket")
 plt.title("8. Top 10 Videos con más comentarios")
 plt.xlabel("Número de comentarios"); plt.ylabel("Título del Video")
-plt.tight_layout(); plt.show()
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p8.png"), bbox_inches="tight")
+plt.show()
 
-# 9. Correlación entre métricas
+# 9. Matriz de correlación entre métricas
 corr = df[["views","likes","dislikes","comment_count"]].corr()
 plt.figure(figsize=(8,6))
 sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm")
 plt.title("9. Matriz de correlación entre Views, Likes, Dislikes y Comments")
-plt.tight_layout(); plt.show()
+plt.tight_layout()
+plt.savefig(os.path.join(image_folder, "p9.png"), bbox_inches="tight")
+plt.show()
+
+print("✅ Imágenes P1–P9 guardadas en", image_folder)
 
 # -------------------------
 # GUARDAR DATOS PARA GRÁFICO DE ESTADOS
