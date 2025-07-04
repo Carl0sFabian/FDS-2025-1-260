@@ -9,8 +9,8 @@ st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
 @st.cache_data
 def cargar_datos():
-    df = pd.read_csv("Programa/data_limpios/EEUU_limpio.csv")
-    with open("Programa/data/US_category_id.json", "r", encoding="utf-8") as f:
+    df = pd.read_csv("FDS-2025-1-260/Programa/data_limpios/EEUU_limpio.csv")
+    with open("FDS-2025-1-260/Programa/data/US_category_id.json", "r", encoding="utf-8") as f:
         cat_map = {int(i["id"]): i["snippet"]["title"] for i in json.load(f)["items"]}
     df["category_name"] = df["category_id"].map(cat_map)
     df["trending_date_dt"] = pd.to_datetime(df["trending_date"], format="%y.%d.%m", errors="coerce")

@@ -458,7 +458,7 @@ function updatePieChart(key) {
 
 sel.addEventListener("change", () => {
     const val = sel.value;
-    img.src = `/Programa/static/images/p${val}.png`;
+    img.src = `/FDS-2025-1-260/Programa/static/images/p${val}.png`;
     img.alt = `Gráfico Pregunta ${val}`;
     updateDataTable(val);
     updatePieChart(val);
@@ -474,7 +474,7 @@ downloadBtn.addEventListener("click", () => {
     a.click();
 });
 
-img.src = `/Programa/static/images/p${sel.value}.png`;
+img.src = `/FDS-2025-1-260/Programa/static/images/p${sel.value}.png`;
 img.alt = `Gráfico Pregunta ${sel.value}`;
 updateDataTable(sel.value);
 updatePieChart(sel.value);
