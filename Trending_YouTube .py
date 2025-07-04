@@ -6,8 +6,8 @@ import json
 import os
 import plotly.express as px
 
-csv_path = "Programa/data/USvideos_cc50_202101.csv"
-json_path = "Programa/data/US_category_id.json"
+csv_path = "FDS-2025-1-260/Programa/data/USvideos_cc50_202101.csv"
+json_path = "FDS-2025-1-260/Programa/data/US_category_id.json"
 pais = "EE.UU"
 
 print(f"\n\n📊 === {pais.upper()} ===")
@@ -70,7 +70,7 @@ df["publish_hour"]    = pd.to_datetime(df["publish_time"], errors="coerce").dt.h
 df["trending_date_dt"]= pd.to_datetime(df["trending_date"],
                                        format="%y.%d.%m", errors="coerce")
 
-clean_path = "Programa/data_limpios/EEUU_limpio.csv"
+clean_path = "FDS-2025-1-260/Programa/data_limpios/EEUU_limpio.csv"
 df.to_csv(clean_path, index=False)
 print(f"✅ Datos limpios guardados en: {clean_path}")
 
@@ -84,7 +84,7 @@ stats = {
     "total_dislikes":   int(df["dislikes"].sum()),
     "total_comments":   int(df["comment_count"].sum())
 }
-stats_path = "Programa/data_limpios/stats.json"
+stats_path = "FDS-2025-1-260/Programa/data_limpios/stats.json"
 with open(stats_path, "w", encoding="utf-8") as f:
     json.dump(stats, f, ensure_ascii=False, indent=2)
 
@@ -92,7 +92,7 @@ print(f"✅ Estadísticas guardadas en: {stats_path}")
 
 
 # -------------------------
-image_folder = "Programa/static/images"
+image_folder = "FDS-2025-1-260/Programa/static/images"
 os.makedirs(image_folder, exist_ok=True)
 
 # ----------------------------------
@@ -251,7 +251,7 @@ state_data = {
     "values": state_counts.values.tolist()
 }
 
-state_chart_path = "Programa/data_limpios/state_chart.json"
+state_chart_path = "FDS-2025-1-260/Programa/data_limpios/state_chart.json"
 with open(state_chart_path, "w", encoding="utf-8") as f:
     json.dump(state_data, f, ensure_ascii=False, indent=2)
 
@@ -268,7 +268,7 @@ dtype_data = {
 }
 
 # Asegúrate de que la carpeta exista
-out_folder = "Programa/data_limpios"
+out_folder = "FDS-2025-1-260/Programa/data_limpios"
 os.makedirs(out_folder, exist_ok=True)
 
 # Guardar JSON
@@ -286,7 +286,7 @@ freq_data = {
     "counts":     freq_cat.values.tolist()
 }
 
-out_folder = "Programa/data_limpios"
+out_folder = "FDS-2025-1-260/Programa/data_limpios"
 os.makedirs(out_folder, exist_ok=True)
 
 freq_path = os.path.join(out_folder, "freq_cat.json")
@@ -315,7 +315,7 @@ pub_years_data = {
     "avg_views": yearly_stats["avg_views"].round(0).astype(int).tolist()
 }
 
-pub_path = "Programa/data_limpios/pub_years.json"
+pub_path = "FDS-2025-1-260/Programa/data_limpios/pub_years.json"
 with open(pub_path, "w", encoding="utf-8") as f:
     json.dump(pub_years_data, f, ensure_ascii=False, indent=2)
 
