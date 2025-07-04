@@ -113,15 +113,18 @@ plt.show()
 likes_cat = df.groupby("category_name")["likes"].mean().sort_values()
 plt.figure(figsize=(10,6))
 sns.barplot(x=likes_cat.values[-10:], y=likes_cat.index[-10:], palette="Blues_r")
+plt.gca().invert_yaxis()  
 plt.title("2a. Top 10 categorías con más likes promedio")
 plt.xlabel("Likes promedio")
 plt.tight_layout()
 plt.savefig(os.path.join(image_folder, "p2a.png"), bbox_inches="tight")
 plt.show()
 
+
 # 2b. Top 10 categorías con menos likes promedio
 plt.figure(figsize=(10,6))
 sns.barplot(x=likes_cat.values[:10], y=likes_cat.index[:10], palette="Reds_r")
+plt.gca().invert_yaxis()  
 plt.title("2b. Top 10 categorías con menos likes promedio")
 plt.xlabel("Likes promedio")
 plt.tight_layout()
@@ -208,8 +211,12 @@ fig = px.scatter_mapbox(
     hover_data={"views":True,"likes":True,"dislikes":True},
     title="7. USA - Vistas, Me gusta y No me gusta por Estado"
 )
-fig.update_layout(mapbox_style="carto-positron",
-                  margin={"r":0,"t":50,"l":0,"b":0})
+fig.update_layout(
+    mapbox_style="carto-positron",
+    margin={"r":40, "t":80, "l":40, "b":40},
+    height=650  
+)
+
 fig.write_image(os.path.join(image_folder, "p7.png"))
 fig.show()
 

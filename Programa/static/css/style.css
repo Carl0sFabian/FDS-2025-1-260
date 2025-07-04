@@ -332,3 +332,70 @@ body {
     border-radius: 10px;
     padding: 6px;
 }
+.styled-csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: #fff;
+}
+
+.styled-csv-table thead th {
+    padding: 10px 8px;
+    background-color: #363648;
+    border-bottom: 2px solid #555;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    text-align: left;
+    font-weight: 600;
+}
+
+.styled-csv-table tbody td {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    background-color: #2a2a3a;
+}
+
+.styled-csv-table tbody tr:hover {
+    background-color: #3c3c4d;
+    cursor: pointer;
+}
+
+#csvTableContainer {
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 10px;
+}
+#jsonContainer {
+    font-family: monospace;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 12px;
+    background-color: #1e1e2e;
+    border-radius: 10px;
+    border: 1px solid #444;
+    overflow-y: auto;
+    max-height: 400px;
+    color: #fff;
+}
+
+.json-key {
+    color: #fca903;
+}
+
+.json-string {
+    color: #7dd3fc;
+}
+
+.json-number {
+    color: #f87171;
+}
+
+.json-boolean {
+    color: #a3e635;
+}
+
+.json-null {
+    color: #facc15;
+}

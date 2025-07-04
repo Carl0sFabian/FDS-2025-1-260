@@ -353,16 +353,88 @@ const columnsMap = {
     '8': ['title', 'comment_count'],
     '9': ['views', 'likes', 'dislikes', 'comment_count']
 };
-
-function updateDataTable(key) {
-    const cols = columnsMap[key] || [];
+async function updateDataTable(key) {
+    const tbody = document.querySelector('#dataTable tbody');
     tbody.innerHTML = '';
-    cols.forEach(col => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="border:1px solid #555; padding:8px;">${col}</td>`;
-        tbody.appendChild(tr);
+
+    const res = await fetch('../data_limpios/EEUU_limpio.csv');
+    const text = await res.text();
+
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    const dataRows = lines.slice(1).map(row => {
+        const regex = /(".*?"|[^",]+)(?=\s*,|\s*$)/g;
+        return row.match(regex)?.map(cell => cell.replace(/^"|"$/g, '')) || [];
     });
+
+    const categorias_validas = [
+        "Entertainment", "Music", "Comedy", "News & Politics", "Science & Technology",
+        "Education", "Gaming", "People & Blogs", "Howto & Style", "Film & Animation",
+        "Pets & Animals", "Travel & Events", "Sports", "Autos & Vehicles",
+        "Nonprofits & Activism", "Shows"
+    ];
+
+    if (key === '1') {
+        const idx = headers.indexOf('category_name');
+        if (idx === -1) return;
+
+        const conteo = {};
+        dataRows.forEach(row => {
+            const cat = row[idx]?.trim();
+            if (categorias_validas.includes(cat)) {
+                conteo[cat] = (conteo[cat] || 0) + 1;
+            }
+        });
+
+        // Ordenar el conteo por cantidad descendente
+        const ordenado = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
+
+        // Crear encabezado
+        const headerRow = document.createElement('tr');
+        ['Categoría', 'Cantidad de videos'].forEach(text => {
+            const th = document.createElement('th');
+            th.textContent = text;
+            th.style = 'border:1px solid #555; padding:8px; background:#444;';
+            headerRow.appendChild(th);
+        });
+        tbody.appendChild(headerRow);
+
+        ordenado.forEach(([cat, count]) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="border:1px solid #555; padding:8px;">${cat}</td>
+                <td style="border:1px solid #555; padding:8px;">${count.toLocaleString()}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+    } else {
+        const cols = columnsMap[key] || [];
+        const colIndexes = cols.map(c => headers.indexOf(c));
+
+        const headerRow = document.createElement('tr');
+        cols.forEach(col => {
+            const th = document.createElement('th');
+            th.textContent = col;
+            th.style = 'border:1px solid #555; padding:8px; background:#444;';
+            headerRow.appendChild(th);
+        });
+        tbody.appendChild(headerRow);
+
+        dataRows.forEach(row => {
+            const tr = document.createElement('tr');
+            colIndexes.forEach(i => {
+                const td = document.createElement('td');
+                td.textContent = i >= 0 ? (row[i] || '—') : '—';
+                td.style = 'border:1px solid #555; padding:8px;';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+    }
 }
+
+
 
 let pieChart;
 function updatePieChart(key) {
@@ -415,10 +487,7 @@ fetch('../data_limpios/EEUU_limpio.csv')
         const container = document.getElementById('csvTableContainer');
 
         const table = document.createElement('table');
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.style.fontSize = '12px';
-        table.style.color = '#fff';
+        table.className = 'styled-csv-table';
 
         const thead = document.createElement('thead');
         const headRow = document.createElement('tr');
@@ -458,17 +527,55 @@ fetch('../data_limpios/EEUU_limpio.csv')
     });
 
 fetch('../data/US_category_id.json')
-  .then(res => {
-    if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
-    return res.json();
-  })
-  .then(data => {
-    const pretty = JSON.stringify(data, null, 2);
-    const pre = document.getElementById('jsonContainer');
-    pre.textContent = pretty;
-  })
-  .catch(err => {
-    const pre = document.getElementById('jsonContainer');
-    pre.textContent = '❌ No se pudo cargar el JSON.';
-    console.error(err);
-  });
+    .then(res => {
+        if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+\.?\d*)/g, match => {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'json-key';
+                    } else {
+                        cls = 'json-string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return `<span class="${cls}">${match}</span>`;
+            });
+        }
+
+        fetch('../data/US_category_id.json')
+            .then(res => {
+                if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                const pretty = JSON.stringify(data, null, 2);
+                const pre = document.getElementById('jsonContainer');
+                pre.innerHTML = syntaxHighlight(pretty);
+            })
+            .catch(err => {
+                const pre = document.getElementById('jsonContainer');
+                pre.textContent = '❌ No se pudo cargar el JSON.';
+                console.error(err);
+            });
+
+    })
+    .catch(err => {
+        const pre = document.getElementById('jsonContainer');
+        pre.textContent = '❌ No se pudo cargar el JSON.';
+        console.error(err);
+    });
+function updateGraph() {
+    const selector = document.getElementById("graphSelector");
+    const selectedImage = selector.value;
+    document.getElementById("chartImage").src = "/images/" + selectedImage;
+}
