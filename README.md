@@ -89,9 +89,16 @@ A continuación se detallan las columnas del archivo CSV:
 | lon                   | Numérico     | Longitud geográfica                                           |
 | geometry              | Geoespacial  | Coordenadas geográficas en formato WKT                        |
 
-El dataset incluye 20 columnas, algunas de las cuales fueron limpiadas, transformadas (logarítmicamente) y enriquecidas para mejorar la calidad del análisis. Se aplicaron técnicas como imputación de datos nulos, detección y winsorización de outliers, y creación de nuevas variables.
+El dataset incluye 20 columnas, algunas de las cuales fueron limpiadas, transformadas (logarítmicamente) y enriquecidas para mejorar la calidad del análisis. Se aplicaron técnicas como imputación de datos nulos, detección y creación de nuevas variables.
 
-<center><h1>✅ Conclusiones </h1></center>
+<center><h1>✅ Conclusiones </h1></center
+Durante el desarrollo del análisis se extrajeron hallazgos clave para el negocio:
+- Predominio de categorías como "Entertainment", "Music" y "Howto & Style", lo que evidencia una clara orientación de los usuarios hacia contenidos emocionales, virales o visualmente atractivos.
+- Los altos niveles de "likes" promedio y ratios de aprobación muestran qué temáticas conectan más con la audiencia y cómo se genera engagement positivo.
+- Canales como ESPN dominan en número de apariciones en tendencia, lo que refleja buenas prácticas de publicación, fidelidad de la audiencia y timing estratégico.
+- Picos temporales en febrero 2018 revelan eventos virales o lanzamientos de alto impacto, lo cual refuerza la necesidad de monitoreo continuo del entorno.
+- Mapas de calor y correlaciones permitieron observar concentraciones geográficas y relaciones fuertes entre métricas (likes, comentarios, vistas), esenciales para campañas segmentadas.
+                                  
 <center><h1>📄 Licencia de Uso</h1></center>
 Este trabajo se ha realizado de manera estrictamente académica para el curso Fundamentos de Data Science de la Universidad Peruana de Ciencias Aplicadas (UPC).
 
