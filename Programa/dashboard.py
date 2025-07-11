@@ -273,6 +273,17 @@ elif opcion == preguntas[1]:
                 </ul>
             </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li><b>Entertainment</b> se posiciona como la categoría líder, lo que representa una oportunidad clave para orientar campañas hacia este tipo de contenido.</li>
+                <li>Se recomienda a la empresa <b>crear o apoyar contenido de entretenimiento</b> para maximizar visibilidad y viralidad.</li>
+                <li>Además, explorar categorías como <b>Music</b> y <b>Howto & Style</b> puede diversificar el impacto dentro de nichos populares.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
 
 
 elif opcion == preguntas[2]:
@@ -295,6 +306,16 @@ elif opcion == preguntas[2]:
                 <li>Estos contenidos tienden a provocar reacciones inmediatas, como dar "me gusta", debido a su valor de entretenimiento o fenómenos virales.</li>
                 <li>Este comportamiento sugiere un alto nivel de <b>engagement</b>, especialmente en videos musicales, que suelen ser compartidos, comentados y revisitados con frecuencia.</li>
                 <li>Además, esto podría estar influenciado por el algoritmo de YouTube, que prioriza este tipo de contenido en las recomendaciones, amplificando aún más su visibilidad.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>Fomentar la creación de contenido viral como <b>videos musicales</b> o de <b>activismo</b> puede generar una mayor conexión con el público.</li>
+                <li>Se aconseja alentar a sus clientes a aprovechar <b>temáticas musicales y sociales</b>.</li>
+                <li>Estos datos permiten orientar campañas hacia formatos que históricamente generan más "me gusta" y respuestas afectivas.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -324,6 +345,16 @@ elif opcion == preguntas[3]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>Para mejorar la interacción, se recomienda explorar formas de hacer más atractivo el contenido informativo, técnico o de nicho.</li>
+                <li>Incluir elementos visuales o enfoques emocionales puede aumentar la recepción de estos videos.</li>
+                <li>También puede ser útil implementar <b>estrategias de microsegmentación</b> para alcanzar públicos realmente interesados.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
 elif opcion == preguntas[4]:
     df["ratio_likes_dislikes"] = df["likes"] / (df["dislikes"] + 1)
@@ -346,6 +377,16 @@ elif opcion == preguntas[4]:
                 <li>Las categorías con los mejores promedios en este ratio son <b>Pets & Animals</b>, <b>Music</b> y <b>People & Blogs</b>, lo que sugiere que estos tipos de contenido generan reacciones predominantemente favorables.</li>
                 <li>Estos temas suelen ser <b>emocionales, entretenidos o personales</b>, por lo que es más probable que provoquen "me gusta" en lugar de críticas.</li>
                 <li>Este patrón puede ser útil para creadores que buscan <b>maximizar la aprobación del público</b>, ya que apunta hacia temáticas que despiertan simpatía y engagement positivo.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>Promover contenido en categorías como <b>Pets & Animals</b>, <b>Music</b> y <b>People & Blogs</b> puede aumentar significativamente la aprobación del público.</li>
+                <li>Estas áreas temáticas son ideales para <b>posicionar marcas con imagen positiva y emocional</b>.</li>
+                <li>Se sugiere orientar campañas hacia experiencias agradables, familiares o personales.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -374,6 +415,16 @@ elif opcion == preguntas[5]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>Fomentar contenido en categorías que generen conversación como <b>People & Blogs</b> o <b>Science & Technology</b> puede ayudar a construir comunidades activas.</li>
+                <li>Se recomienda utilizar <b>llamados a la acción</b> y temáticas participativas para incentivar los comentarios.</li>
+                <li>La agencia puede enfocar campañas en formatos que promuevan el debate o interacción reflexiva.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
 elif opcion == preguntas[6]:
     trend_counts = df["trending_date_dt"].value_counts().sort_index().reset_index()
@@ -396,6 +447,16 @@ elif opcion == preguntas[6]:
             </ul>
         </div>
         """, unsafe_allow_html=True)    
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+<div style="color: #dddddd; font-size: 14px;">
+    <ul>
+        <li>Planificar campañas considerando <b>picos estacionales</b> y tendencias históricas puede mejorar el alcance y la oportunidad del contenido.</li>
+        <li>Se aconseja a la empresa vincular sus publicaciones con <b>eventos de alto tráfico digital</b> como festividades o lanzamientos virales.</li>
+        <li>Analizar el comportamiento temporal puede ayudar a prever y aprovechar momentos óptimos de visibilidad.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 
 elif opcion == preguntas[7]:
     chan_counts = df["channel_title"].value_counts().head(10).reset_index()
@@ -419,6 +480,16 @@ elif opcion == preguntas[7]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+<div style="color: #dddddd; font-size: 14px;">
+    <ul>
+        <li>Estudiar el contenido de canales líderes como ESPN puede revelar prácticas efectivas de engagement y contenido.</li>
+        <li>La empresa puede recomendar replicar estas estrategias, adaptándolas a otras temáticas como tecnología o educación.</li>
+        <li>También se sugiere alinear publicaciones con <b>eventos relevantes</b> para aprovechar picos de atención masiva.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 
 
 elif opcion == preguntas[8]:
@@ -443,6 +514,16 @@ elif opcion == preguntas[8]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+<div style="color: #dddddd; font-size: 14px;">
+    <ul>
+        <li>Explorar colaboraciones con <b>creadores emergentes</b> puede ofrecer acceso a audiencias nuevas y nichos poco saturados.</li>
+        <li>La agencia podría mapear estos canales para identificar oportunidades de <b>coproducción o patrocinio</b>.</li>
+        <li>También es posible utilizar estas colaboraciones para probar nuevos formatos o enfoques.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 
 elif opcion == preguntas[9]:
     state_summary = df.groupby("state").agg({
@@ -479,6 +560,16 @@ elif opcion == preguntas[9]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+<div style="color: #dddddd; font-size: 14px;">
+    <ul>
+        <li>Analizar la geolocalización del engagement permite orientar campañas según <b>hábitos de consumo por región</b>.</li>
+        <li>Se recomienda crear contenido adaptado a estados con alto volumen de likes y vistas.</li>
+        <li>También puede aprovecharse para <b>personalizar estrategias publicitarias regionales</b>.</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
         
         
 elif opcion == preguntas[10]:
@@ -503,6 +594,16 @@ elif opcion == preguntas[10]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>Los videos con más comentarios pueden ser aprovechados como referencia para replicar <b>temáticas de alto interés</b>.</li>
+                <li>Se recomienda fomentar contenido polémico o emotivo para promover conversaciones significativas.</li>
+                <li>Este enfoque puede posicionar a las marcas como actores relevantes en el diálogo digital.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
 elif opcion == preguntas[11]:
     corr = df[["views","likes","dislikes","comment_count"]].corr()
@@ -520,6 +621,16 @@ elif opcion == preguntas[11]:
                 <li>Esta relación sugiere que <b>la popularidad de un video impulsa tanto la aprobación como la conversación</b> en torno a él, reforzando su visibilidad en la plataforma.</li>
                 <li>En contraste, los <b>dislikes muestran menor correlación</b> con el resto de métricas, lo que podría indicar que la desaprobación no sigue necesariamente el mismo patrón de crecimiento que la popularidad general.</li>
                 <li>Estas correlaciones pueden ser útiles para <b>predecir el rendimiento</b> de un video o evaluar el <b>impacto de una estrategia de contenido</b>.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown('<h3 style="color:#dddddd;">💡 Recomendaciones</h3>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style="color: #dddddd; font-size: 14px;">
+            <ul>
+                <li>El fuerte vínculo entre vistas, likes y comentarios puede guiar la <b>priorización de métricas clave</b> en el diseño de campañas.</li>
+                <li>La empresa debería fomentar contenido que combine <b>visual appeal</b> con capacidad de generar conversación.</li>
+                <li>También se sugiere monitorear los dislikes para evitar impactos negativos en la percepción de marca.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
