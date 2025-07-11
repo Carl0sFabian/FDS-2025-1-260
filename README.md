@@ -65,3 +65,36 @@ El dataset utilizado proviene de una versión modificada del conocido conjunto d
 - `US_category_id.json`: mapea los ID de categorías con sus respectivos nombres (ej. "Music", "Gaming", etc.).
 
 A continuación se detallan las columnas del archivo CSV:
+
+| Columna               | Tipo de Dato | Descripción                                                   |
+|------------------------|--------------|---------------------------------------------------------------|
+| video_id              | Categórico   | Identificador único del video                                 |
+| trending_date         | Fecha        | Fecha en que el video estuvo en tendencia                     |
+| title                 | Categórico   | Título del video                                              |
+| channel_title         | Categórico   | Nombre del canal                                              |
+| category_id           | Categórico   | ID de la categoría del video                                  |
+| publish_time          | Fecha        | Fecha y hora de publicación del video                         |
+| tags                  | Categórico   | Etiquetas asociadas al video                                  |
+| views                 | Entero       | Número de visualizaciones                                     |
+| likes                 | Entero       | Número de "me gusta"                                          |
+| dislikes              | Entero       | Número de "no me gusta"                                       |
+| comment_count         | Entero       | Número de comentarios                                         |
+| thumbnail_link        | Categórico   | URL de la miniatura                                           |
+| comments_disabled     | Booleano     | Si los comentarios están deshabilitados                      |
+| ratings_disabled      | Booleano     | Si los ratings están deshabilitados                          |
+| video_error_or_removed| Booleano     | Si el video tiene errores o ha sido eliminado                 |
+| description           | Categórico   | Descripción textual del video                                 |
+| state                 | Categórico   | Estado/región asignado aleatoriamente                         |
+| lat                   | Numérico     | Latitud geográfica                                            |
+| lon                   | Numérico     | Longitud geográfica                                           |
+| geometry              | Geoespacial  | Coordenadas geográficas en formato WKT                        |
+
+El dataset incluye 20 columnas, algunas de las cuales fueron limpiadas, transformadas (logarítmicamente) y enriquecidas para mejorar la calidad del análisis. Se aplicaron técnicas como imputación de datos nulos, detección y winsorización de outliers, y creación de nuevas variables.
+
+<center><h1>✅ Conclusiones </h1></center>
+<center><h1>📄 Licencia de Uso</h1></center>
+Este trabajo se ha realizado de manera estrictamente académica para el curso Fundamentos de Data Science de la Universidad Peruana de Ciencias Aplicadas (UPC).
+
+- La fuente de datos original es un conjunto descargado de Kaggle, modificado únicamente con fines didácticos.
+- Queda terminantemente prohibido su uso con objetivos comerciales.
+- Todas las visualizaciones, análisis y modelos aquí presentados constituyen un ejercicio formativo y no deben interpretarse como un producto de mercado.
