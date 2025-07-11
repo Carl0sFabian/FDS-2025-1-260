@@ -11,14 +11,14 @@
 </div>
 </div>
 <div style="width:100%;">&nbsp;</div>
-<center><h1>INTRODUCCIÓN</h1></center>
+<center><h1>📙 Introducción</h1></center>
 En la era digital actual, el volumen de información generado a través de plataformas en línea como YouTube ha crecido de manera exponencial, convirtiéndose en una fuente rica y valiosa de datos. Las organizaciones buscan aprovechar este flujo constante de información para entender mejor el comportamiento de los usuarios, identificar patrones de consumo y tomar decisiones estratégicas basadas en evidencia. En este contexto, la Ciencia de Datos se posiciona como una disciplina clave para transformar datos en conocimiento útil y accesible.
 El presente proyecto de Ciencia de Datos tiene como objetivo analizar las tendencias de videos de YouTube en diferentes países con el propósito de generar insights que ayuden a una empresa de marketing digital a comprender qué tipos de contenidos captan mayor atención, cuáles son mejor valorados por los usuarios, y cómo varían estas tendencias en el tiempo y en el espacio geográfico.
 El alcance del proyecto abarca el tratamiento, exploración, modelado y análisis de un conjunto de datos compuesto por estadísticas diarias de videos en tendencia en YouTube, segmentados por país, categoría y otras variables relevantes. A través de la aplicación de la metodología CRISP-DM, se pretende extraer conocimiento significativo que permita, entre otras cosas, identificar las categorías más populares, evaluar el desempeño de los canales, analizar el comportamiento de los usuarios según la ubicación geográfica, y explorar la posibilidad de predecir métricas clave como vistas, likes y dislikes.
 En suma, este proyecto busca demostrar cómo un enfoque estructurado y metodológico puede convertir grandes volúmenes de datos en una fuente poderosa de información estratégica, permitiendo a las organizaciones adaptarse y responder con mayor eficacia a las dinámicas del entorno digital.
 
 <div style="width:100%;">&nbsp;</div>
-<center><h1>INTEGRANTES Y ROLES</h1></center>
+<center><h1>👥 Integrantes y Roles</h1></center>
 Los roles que participan para el desarrollo del proyecto son los siguientes:
 
 <table>
@@ -35,26 +35,33 @@ Los roles que participan para el desarrollo del proyecto son los siguientes:
       <td>Business Project Sponsor</td>
       <td>Define el valor de negocio, criterios de éxito y prioriza requerimientos</td>
       <td>Comprensión del negocio y Evaluación</td>
-      <td><!-- Nombre del miembro --></td>
+      <td>Elías Moncada Olivares</td>
     </tr>
     <tr>
       <td>Data Engineer</td>
       <td>Ingesta, limpieza y orquestación de los datos; crea pipelines reproducibles</td>
       <td>Comprensión / Preparación de datos</td>
-      <td><!-- Nombre del miembro --></td>
+      <td>Carlos Mendoza Quispe</td>
     </tr>
     <tr>
       <td>Data Scientist</td>
       <td>Feature engineering, selección de modelos, entrenamiento y validación</td>
       <td>Modelado y Evaluación</td>
-      <td><!-- Nombre del miembro --></td>
+      <td>Carlos Mendoza Quispe</td>
     </tr>
     <tr>
       <td>Data Analyst</td>
       <td>Análisis exploratorio, visualizaciones y comunicación de insights</td>
       <td>Comprensión / Preparación de datos y Conclusiones</td>
-      <td><!-- Nombre del miembro --></td>
+      <td>Elías Moncada Olivares</td>
     </tr>
   </tbody>
 </table>
 
+<center><h1>📁 Descripción del Conjunto de Datos</h1></center>
+El dataset utilizado proviene de una versión modificada del conocido conjunto de datos Trending YouTube Video Statistics de Kaggle. Para este trabajo se utilizaron específicamente los archivos correspondientes a Estados Unidos:
+
+- `USvideos_cc50_202101.csv`: contiene registros diarios de videos en tendencia. Incluye campos como ID, título, canal, categoría, vistas, likes, dislikes, comentarios, fecha, entre otros. Se añadieron columnas como estado, latitud, longitud y geometría.
+- `US_category_id.json`: mapea los ID de categorías con sus respectivos nombres (ej. "Music", "Gaming", etc.).
+
+A continuación se detallan las columnas del archivo CSV:
