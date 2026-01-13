@@ -8,17 +8,18 @@ import os
 
 st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
-# ==========================
-# CONFIGURACIÓN DE RUTAS
-# ==========================
-csv_path = "data/USvideos_cc50_202101.csv"
-json_path = "data/US_category_id.json"
-clean_path = "data_limpios/EEUU_limpio.csv"
-stats_path = "data_limpios/stats.json"
-state_chart_path = "data_limpios/state_chart.json"
-freq_path = "data_limpios/freq_cat.json"
-pub_path = "data_limpios/pub_years.json"
-dtype_path = "data_limpios/dtype_distribution.json"
+# 1. Detectar la carpeta donde está el script (osea, la carpeta "Programa")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 2. Unir la ubicación del script con las subcarpetas correctamente
+csv_path = os.path.join(BASE_DIR, "data", "USvideos_cc50_202101.csv")
+json_path = os.path.join(BASE_DIR, "data", "US_category_id.json")
+clean_path = os.path.join(BASE_DIR, "data_limpios", "EEUU_limpio.csv")
+stats_path = os.path.join(BASE_DIR, "data_limpios", "stats.json")
+state_chart_path = os.path.join(BASE_DIR, "data_limpios", "state_chart.json")
+freq_path = os.path.join(BASE_DIR, "data_limpios", "freq_cat.json")
+pub_path = os.path.join(BASE_DIR, "data_limpios", "pub_years.json")
+dtype_path = os.path.join(BASE_DIR, "data_limpios", "dtype_distribution.json")
 
 @st.cache_data
 def cargar_datos():
@@ -50,7 +51,7 @@ def cargar_datos():
     df["publish_year"] = df["publish_time"].dt.year
 
     # Guardar CSV limpio
-    os.makedirs("Programa/data_limpios", exist_ok=True)
+    os.makedirs(os.path.join(BASE_DIR, "data_limpios"), exist_ok=True)
     df.to_csv(clean_path, index=False)
 
     # Guardar estadísticas
