@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import json
 import os
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
@@ -12,6 +13,7 @@ st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 2. Unir la ubicación del script con las subcarpetas correctamente
+html_path = os.path.join(BASE_DIR, "templates", "Dashboard.html")
 csv_path = os.path.join(BASE_DIR, "data", "USvideos_cc50_202101.csv")
 json_path = os.path.join(BASE_DIR, "data", "US_category_id.json")
 clean_path = os.path.join(BASE_DIR, "data_limpios", "EEUU_limpio.csv")
@@ -127,6 +129,20 @@ def agregar_estilos():
 
 agregar_estilos()
 
+# ==========================================
+# RENDERIZAR DISEÑO HTML (FIGMA STYLE)
+# ==========================================
+if os.path.exists(html_path):
+    with open(html_path, 'r', encoding='utf-8') as f:
+        html_design = f.read()
+    
+    # Esto inyecta tu Dashboard.html al principio de la página
+    # Ajusta 'height' según qué tan largo sea tu diseño
+    components.html(html_design, height=800, scrolling=True)
+else:
+    st.error("No se encontró el archivo Dashboard.html en la carpeta templates")
+
+st.markdown("---") # Una línea divisoria para separar el diseño del análisis
 
 preguntas = [
     "A. Clasificación con Regresión Logística",
