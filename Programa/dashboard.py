@@ -98,49 +98,37 @@ def cargar_datos():
 df = cargar_datos()
 
 # ==========================================
-# ESTILOS Y PREPARACIÓN DE INYECCIÓN
+# PREPARAR DATOS PARA EL DASHBOARD HTML
 # ==========================================
-def leer_json_limpio(ruta):
+def leer_json_para_js(ruta):
     if os.path.exists(ruta):
         with open(ruta, 'r', encoding='utf-8') as f:
-            # Limpiamos saltos de línea para evitar errores de Syntax en JS
-            return f.read().replace('\n', ' ').replace("'", "\\'")
+            datos = json.load(f)
+            # Convertimos a string de JSON asegurando que sea compatible con JS
+            return json.dumps(datos).replace("'", "\\'") 
     return "{}"
 
-# Ocultar elementos nativos de Streamlit para que el diseño Figma luzca profesional
-st.markdown("""
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    .block-container {padding: 0rem;}
-    </style>
-    """, unsafe_allow_html=True)
+# Obtenemos los strings de los JSONs
+stats_js = leer_json_para_js(stats_path)
+state_js = leer_json_para_js(state_chart_path)
+dtype_js = leer_json_para_js(dtype_path)
+freq_js = leer_json_para_js(freq_path)
 
-# ==========================================
-# RENDERIZAR DISEÑO HTML (CON INYECCIÓN)
-# ==========================================
 if os.path.exists(html_path):
     with open(html_path, 'r', encoding='utf-8') as f:
         html_content = f.read()
     
-    # Obtenemos los strings de los JSONs generados
-    stats_js = leer_json_limpio(stats_path)
-    state_js = leer_json_limpio(state_chart_path)
-    dtype_js = leer_json_limpio(dtype_path)
-    freq_js = leer_json_limpio(freq_path)
-
-    # REEMPLAZO DINÁMICO DE FETCH:
-    # Sustituimos las promesas de fetch por los datos que ya tenemos listos
+    # REEMPLAZO DINÁMICO: 
+    # Usamos JSON.parse para que el navegador maneje los datos correctamente
     html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
 
-    # Renderizado del componente HTML (Figma Style)
-    components.html(html_content, height=950, scrolling=True)
+    # Renderizado (Height aumentado para evitar recortes)
+    components.html(html_content, height=1200, scrolling=True)
 else:
-    st.error("No se encontró el archivo Dashboard.html en templates/")
+    st.error("Dashboard.html no encontrado.")
 
 st.markdown("<br><h2 style='text-align:center; color:white;'>🔍 Análisis Interactivo con Plotly</h2>", unsafe_allow_html=True)
 st.markdown("---")
