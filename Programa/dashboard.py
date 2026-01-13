@@ -97,38 +97,48 @@ def cargar_datos():
 # Ejecutar la lógica de datos
 df = cargar_datos()
 
-# ==========================================
-# PREPARAR DATOS PARA EL DASHBOARD HTML
-# ==========================================
-def leer_json_para_js(ruta):
+def obtener_datos_json(ruta):
     if os.path.exists(ruta):
         with open(ruta, 'r', encoding='utf-8') as f:
-            datos = json.load(f)
-            # Convertimos a string de JSON asegurando que sea compatible con JS
-            return json.dumps(datos).replace("'", "\\'") 
+            # Quitamos saltos de línea para que no rompa el JS
+            return f.read().replace('\n', ' ')
     return "{}"
 
-# Obtenemos los strings de los JSONs
-stats_js = leer_json_para_js(stats_path)
-state_js = leer_json_para_js(state_chart_path)
-dtype_js = leer_json_para_js(dtype_path)
-freq_js = leer_json_para_js(freq_path)
+# Leemos los archivos que el propio script generó arriba
+stats_js = obtener_datos_json(stats_path)
+state_js = obtener_datos_json(state_chart_path)
+dtype_js = obtener_datos_json(dtype_path)
+freq_js = obtener_datos_json(freq_path)
 
+# ==========================================
+# INTEGRACIÓN DEL DISEÑO FIGMA
+# ==========================================
 if os.path.exists(html_path):
     with open(html_path, 'r', encoding='utf-8') as f:
         html_content = f.read()
     
-    # REEMPLAZO DINÁMICO: 
-    # Usamos JSON.parse para que el navegador maneje los datos correctamente
+    # REEMPLAZO DINÁMICO: Sustituimos los fetch() por los datos reales de Python
+    # Esto soluciona los errores 404 de tu consola
     html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
     html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
 
-    # Renderizado (Height aumentado para evitar recortes)
-    components.html(html_content, height=1200, scrolling=True)
+    # Estilos para limpiar la interfaz de Streamlit
+    st.markdown("""
+        <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            .block-container {padding: 0rem;}
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Renderizar el Dashboard profesional
+    # Aumenta el height según sea necesario para evitar el doble scroll
+    components.html(html_content, height=1000, scrolling=True)
 else:
-    st.error("Dashboard.html no encontrado.")
+    st.error("No se encontró el archivo Dashboard.html")
 
 st.markdown("<br><h2 style='text-align:center; color:white;'>🔍 Análisis Interactivo con Plotly</h2>", unsafe_allow_html=True)
 st.markdown("---")
