@@ -7,24 +7,31 @@ import json
 import os
 import streamlit.components.v1 as components
 
+# Configuración inicial
 st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
-# 1. Detectar la carpeta donde está el script (osea, la carpeta "Programa")
+# 1. Detectar la carpeta base
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Unir la ubicación del script con las subcarpetas correctamente
+# 2. Configuración de rutas
 html_path = os.path.join(BASE_DIR, "templates", "Dashboard.html")
 csv_path = os.path.join(BASE_DIR, "data", "USvideos_cc50_202101.csv")
 json_path = os.path.join(BASE_DIR, "data", "US_category_id.json")
-clean_path = os.path.join(BASE_DIR, "data_limpios", "EEUU_limpio.csv")
-stats_path = os.path.join(BASE_DIR, "data_limpios", "stats.json")
-state_chart_path = os.path.join(BASE_DIR, "data_limpios", "state_chart.json")
-freq_path = os.path.join(BASE_DIR, "data_limpios", "freq_cat.json")
-pub_path = os.path.join(BASE_DIR, "data_limpios", "pub_years.json")
-dtype_path = os.path.join(BASE_DIR, "data_limpios", "dtype_distribution.json")
+# Carpetas de datos limpios
+data_limpios_dir = os.path.join(BASE_DIR, "data_limpios")
+clean_path = os.path.join(data_limpios_dir, "EEUU_limpio.csv")
+stats_path = os.path.join(data_limpios_dir, "stats.json")
+state_chart_path = os.path.join(data_limpios_dir, "state_chart.json")
+freq_path = os.path.join(data_limpios_dir, "freq_cat.json")
+pub_path = os.path.join(data_limpios_dir, "pub_years.json")
+dtype_path = os.path.join(data_limpios_dir, "dtype_distribution.json")
 
 @st.cache_data
 def cargar_datos():
+    if not os.path.exists(csv_path):
+        st.error(f"No se encontró el archivo CSV en {csv_path}")
+        st.stop()
+        
     df = pd.read_csv(csv_path)
 
     # Cargar categorías
@@ -52,11 +59,11 @@ def cargar_datos():
     df["trending_date_dt"] = pd.to_datetime(df["trending_date"], format="%y.%d.%m", errors="coerce")
     df["publish_year"] = df["publish_time"].dt.year
 
-    # Guardar CSV limpio
-    os.makedirs(os.path.join(BASE_DIR, "data_limpios"), exist_ok=True)
+    # Crear carpeta si no existe
+    os.makedirs(data_limpios_dir, exist_ok=True)
     df.to_csv(clean_path, index=False)
 
-    # Guardar estadísticas
+    # Guardar JSONs para que el HTML Figma los use
     stats = {
         "total_rows": int(df.shape[0]),
         "total_views": int(df["views"].sum()),
@@ -67,83 +74,64 @@ def cargar_datos():
     with open(stats_path, "w", encoding="utf-8") as f:
         json.dump(stats, f, indent=2, ensure_ascii=False)
 
-    # Frecuencia categorías
     freq_cat = df["category_name"].value_counts().head(10)
-    freq_data = {
-        "categories": freq_cat.index.tolist(),
-        "counts": freq_cat.values.tolist()
-    }
+    freq_data = {"categories": freq_cat.index.tolist(), "counts": freq_cat.values.tolist()}
     with open(freq_path, "w", encoding="utf-8") as f:
         json.dump(freq_data, f, indent=2, ensure_ascii=False)
 
-    # Estados
     state_counts = df["state"].value_counts().sort_index()
-    state_data = {
-        "labels": state_counts.index.tolist(),
-        "values": state_counts.values.tolist()
-    }
+    state_data = {"labels": state_counts.index.tolist(), "values": state_counts.values.tolist()}
     with open(state_chart_path, "w", encoding="utf-8") as f:
         json.dump(state_data, f, indent=2, ensure_ascii=False)
 
-    # Distribución de tipos
     dtype_counts = df.dtypes.value_counts().to_dict()
-    dtype_data = {
-        "labels": [str(k) for k in dtype_counts.keys()],
-        "values": list(dtype_counts.values())
-    }
+    dt_data = {"labels": [str(k) for k in dtype_counts.keys()], "values": list(dtype_counts.values())}
     with open(dtype_path, "w", encoding="utf-8") as f:
-        json.dump(dtype_data, f, indent=2, ensure_ascii=False)
-
-    # Publicaciones por año
-    yearly_stats = df.groupby("publish_year").agg({
-        "video_id": "count",
-        "views": "mean"
-    }).rename(columns={"video_id": "count_videos", "views": "avg_views"}).dropna()
-    pub_years_data = {
-        "labels": yearly_stats.index.astype(str).tolist(),
-        "values": yearly_stats["count_videos"].astype(int).tolist(),
-        "avg_views": yearly_stats["avg_views"].round(0).astype(int).tolist()
-    }
-    with open(pub_path, "w", encoding="utf-8") as f:
-        json.dump(pub_years_data, f, indent=2, ensure_ascii=False)
+        json.dump(dt_data, f, indent=2, ensure_ascii=False)
 
     return df
 
-# ========================
-# CARGAR DATOS YA LIMPIOS
-# ========================
+# Ejecutar carga
 df = cargar_datos()
 
-def agregar_estilos():
-    st.markdown("""
-        <style>
-            body {
-                background-color: #1e1e2f; /* Cambia esto al color que quieras */
-                color: white;
-            }
-            .stApp {
-                background-color: #1e1e2f; /* Fondo general de la app */
-            }
-        </style>
+# Ocultar elementos de Streamlit para limpieza visual
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    .block-container {padding: 0rem;}
+    </style>
     """, unsafe_allow_html=True)
 
-agregar_estilos()
-
 # ==========================================
-# RENDERIZAR DISEÑO HTML (FIGMA STYLE)
+# RENDERIZAR DISEÑO HTML CON DATOS INYECTADOS
 # ==========================================
 if os.path.exists(html_path):
     with open(html_path, 'r', encoding='utf-8') as f:
-        html_design = f.read()
+        html_content = f.read()
     
-    # Esto inyecta tu Dashboard.html al principio de la página
-    # Ajusta 'height' según qué tan largo sea tu diseño
-    components.html(html_design, height=800, scrolling=True)
+    # Leemos los datos generados para pasarlos al JS del HTML
+    def get_json_str(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            return f.read()
+
+    # Reemplazo de Fetch: Inyectamos los datos directamente en las llamadas fetch del JS
+    html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{get_json_str(stats_path)}'))")
+    html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{get_json_str(state_chart_path)}'))")
+    html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{get_json_str(dtype_path)}'))")
+    html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{get_json_str(freq_path)}'))")
+
+    # Mostrar Dashboard Figma
+    components.html(html_content, height=900, scrolling=True)
 else:
-    st.error("No se encontró el archivo Dashboard.html en la carpeta templates")
+    st.error("No se encontró el archivo Dashboard.html")
 
-st.markdown("---") # Una línea divisoria para separar el diseño del análisis
+st.markdown("<br><h2 style='text-align:center; color:white;'>📊 Análisis Interactivo Detallado</h2>", unsafe_allow_html=True)
 
+# ==========================================
+# SECCIÓN DE PREGUNTAS Y GRÁFICOS
+# ==========================================
 preguntas = [
     "A. Clasificación con Regresión Logística",
     "1. Categorías con mayor número de videos",
