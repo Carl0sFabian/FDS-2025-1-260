@@ -5,36 +5,24 @@ import plotly.express as px
 import plotly.graph_objects as go
 import json
 import os
-import streamlit.components.v1 as components
 
-# ==========================================
-# CONFIGURACIÓN INICIAL
-# ==========================================
 st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
-# 1. Detectar la carpeta base (Programa)
+# 1. Detectar la carpeta donde está el script (osea, la carpeta "Programa")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Configuración de rutas dinámicas
-html_path = os.path.join(BASE_DIR, "templates", "Dashboard.html")
+# 2. Unir la ubicación del script con las subcarpetas correctamente
 csv_path = os.path.join(BASE_DIR, "data", "USvideos_cc50_202101.csv")
 json_path = os.path.join(BASE_DIR, "data", "US_category_id.json")
-
-# Carpetas de datos limpios
-data_limpios_dir = os.path.join(BASE_DIR, "data_limpios")
-clean_path = os.path.join(data_limpios_dir, "EEUU_limpio.csv")
-stats_path = os.path.join(data_limpios_dir, "stats.json")
-state_chart_path = os.path.join(data_limpios_dir, "state_chart.json")
-freq_path = os.path.join(data_limpios_dir, "freq_cat.json")
-pub_path = os.path.join(data_limpios_dir, "pub_years.json")
-dtype_path = os.path.join(data_limpios_dir, "dtype_distribution.json")
+clean_path = os.path.join(BASE_DIR, "data_limpios", "EEUU_limpio.csv")
+stats_path = os.path.join(BASE_DIR, "data_limpios", "stats.json")
+state_chart_path = os.path.join(BASE_DIR, "data_limpios", "state_chart.json")
+freq_path = os.path.join(BASE_DIR, "data_limpios", "freq_cat.json")
+pub_path = os.path.join(BASE_DIR, "data_limpios", "pub_years.json")
+dtype_path = os.path.join(BASE_DIR, "data_limpios", "dtype_distribution.json")
 
 @st.cache_data
 def cargar_datos():
-    if not os.path.exists(csv_path):
-        st.error(f"No se encontró el archivo CSV en {csv_path}")
-        st.stop()
-        
     df = pd.read_csv(csv_path)
 
     # Cargar categorías
@@ -62,11 +50,11 @@ def cargar_datos():
     df["trending_date_dt"] = pd.to_datetime(df["trending_date"], format="%y.%d.%m", errors="coerce")
     df["publish_year"] = df["publish_time"].dt.year
 
-    # Crear carpeta si no existe y guardar datos limpios
-    os.makedirs(data_limpios_dir, exist_ok=True)
+    # Guardar CSV limpio
+    os.makedirs(os.path.join(BASE_DIR, "data_limpios"), exist_ok=True)
     df.to_csv(clean_path, index=False)
 
-    # Guardar JSONs para inyección en el Dashboard HTML
+    # Guardar estadísticas
     stats = {
         "total_rows": int(df.shape[0]),
         "total_views": int(df["views"].sum()),
@@ -77,75 +65,69 @@ def cargar_datos():
     with open(stats_path, "w", encoding="utf-8") as f:
         json.dump(stats, f, indent=2, ensure_ascii=False)
 
+    # Frecuencia categorías
     freq_cat = df["category_name"].value_counts().head(10)
-    freq_data = {"categories": freq_cat.index.tolist(), "counts": freq_cat.values.tolist()}
+    freq_data = {
+        "categories": freq_cat.index.tolist(),
+        "counts": freq_cat.values.tolist()
+    }
     with open(freq_path, "w", encoding="utf-8") as f:
         json.dump(freq_data, f, indent=2, ensure_ascii=False)
 
+    # Estados
     state_counts = df["state"].value_counts().sort_index()
-    state_data = {"labels": state_counts.index.tolist(), "values": state_counts.values.tolist()}
+    state_data = {
+        "labels": state_counts.index.tolist(),
+        "values": state_counts.values.tolist()
+    }
     with open(state_chart_path, "w", encoding="utf-8") as f:
         json.dump(state_data, f, indent=2, ensure_ascii=False)
 
+    # Distribución de tipos
     dtype_counts = df.dtypes.value_counts().to_dict()
-    dt_data = {"labels": [str(k) for k in dtype_counts.keys()], "values": list(dtype_counts.values())}
+    dtype_data = {
+        "labels": [str(k) for k in dtype_counts.keys()],
+        "values": list(dtype_counts.values())
+    }
     with open(dtype_path, "w", encoding="utf-8") as f:
-        json.dump(dt_data, f, indent=2, ensure_ascii=False)
+        json.dump(dtype_data, f, indent=2, ensure_ascii=False)
+
+    # Publicaciones por año
+    yearly_stats = df.groupby("publish_year").agg({
+        "video_id": "count",
+        "views": "mean"
+    }).rename(columns={"video_id": "count_videos", "views": "avg_views"}).dropna()
+    pub_years_data = {
+        "labels": yearly_stats.index.astype(str).tolist(),
+        "values": yearly_stats["count_videos"].astype(int).tolist(),
+        "avg_views": yearly_stats["avg_views"].round(0).astype(int).tolist()
+    }
+    with open(pub_path, "w", encoding="utf-8") as f:
+        json.dump(pub_years_data, f, indent=2, ensure_ascii=False)
 
     return df
 
-# Ejecutar la lógica de datos
+# ========================
+# CARGAR DATOS YA LIMPIOS
+# ========================
 df = cargar_datos()
 
-def obtener_datos_json(ruta):
-    if os.path.exists(ruta):
-        with open(ruta, 'r', encoding='utf-8') as f:
-            # Quitamos saltos de línea para que no rompa el JS
-            return f.read().replace('\n', ' ')
-    return "{}"
-
-# Leemos los archivos que el propio script generó arriba
-stats_js = obtener_datos_json(stats_path)
-state_js = obtener_datos_json(state_chart_path)
-dtype_js = obtener_datos_json(dtype_path)
-freq_js = obtener_datos_json(freq_path)
-
-# ==========================================
-# INTEGRACIÓN DEL DISEÑO FIGMA
-# ==========================================
-if os.path.exists(html_path):
-    with open(html_path, 'r', encoding='utf-8') as f:
-        html_content = f.read()
-    
-    # REEMPLAZO DINÁMICO: Sustituimos los fetch() por los datos reales de Python
-    # Esto soluciona los errores 404 de tu consola
-    html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
-    html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
-    html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
-    html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
-
-    # Estilos para limpiar la interfaz de Streamlit
+def agregar_estilos():
     st.markdown("""
         <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            .block-container {padding: 0rem;}
+            body {
+                background-color: #1e1e2f; /* Cambia esto al color que quieras */
+                color: white;
+            }
+            .stApp {
+                background-color: #1e1e2f; /* Fondo general de la app */
+            }
         </style>
     """, unsafe_allow_html=True)
 
-    # Renderizar el Dashboard profesional
-    # Aumenta el height según sea necesario para evitar el doble scroll
-    components.html(html_content, height=1000, scrolling=True)
-else:
-    st.error("No se encontró el archivo Dashboard.html")
+agregar_estilos()
 
-st.markdown("<br><h2 style='text-align:center; color:white;'>🔍 Análisis Interactivo con Plotly</h2>", unsafe_allow_html=True)
-st.markdown("---")
 
-# ==========================================
-# SECCIÓN DE ANÁLISIS (SELECTBOX)
-# ==========================================
 preguntas = [
     "A. Clasificación con Regresión Logística",
     "1. Categorías con mayor número de videos",
@@ -161,7 +143,7 @@ preguntas = [
     "9. Matriz de correlación"
 ]
 
-opcion = st.selectbox("Elige una sección del análisis detallado", preguntas)
+opcion = st.selectbox("Elige una sección del análisis", preguntas)
 
 if opcion == preguntas[0]:   
     from sklearn.model_selection import train_test_split
@@ -653,5 +635,3 @@ elif opcion == preguntas[11]:
             </ul>
         </div>
         """, unsafe_allow_html=True)
-
-
