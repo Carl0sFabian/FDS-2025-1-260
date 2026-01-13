@@ -91,6 +91,51 @@ def cargar_datos():
 
     return df
 
+
+# ==========================================
+# PREPARAR DATOS PARA EL DASHBOARD HTML
+# ==========================================
+# Leemos los archivos generados para pasárselos al HTML directamente
+def leer_json_seguro(ruta):
+    if os.path.exists(ruta):
+        with open(ruta, 'r', encoding='utf-8') as f:
+            return f.read()
+    return "{}" # Devuelve objeto vacío si no existe
+
+stats_js = leer_json_seguro(stats_path)
+state_js = leer_json_seguro(state_chart_path)
+dtype_js = leer_json_seguro(dtype_path)
+freq_js = leer_json_seguro(freq_path)
+
+# ==========================================
+# RENDERIZAR DISEÑO CON DATOS INYECTADOS
+# ==========================================
+if os.path.exists(html_path):
+    with open(html_path, 'r', encoding='utf-8') as f:
+        html_design = f.read()
+    
+    # REEMPLAZO DINÁMICO: 
+    # Sustituimos las llamadas fetch del JS por los datos que ya tiene Python
+    html_design = html_design.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
+    html_design = html_design.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
+    html_design = html_design.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
+    html_design = html_design.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
+
+    # Ocultar bordes de Streamlit para que el diseño ocupe toda la pantalla
+    st.markdown("""
+        <style>
+            .block-container {padding: 0rem;}
+            iframe {border: none;}
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Renderizado final (Ajusta height según el largo de tu diseño)
+    components.html(html_design, height=1000, scrolling=True)
+else:
+    st.error("Archivo Dashboard.html no encontrado.")
+
+
+
 # Ejecutar carga
 df = cargar_datos()
 
