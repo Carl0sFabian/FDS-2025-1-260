@@ -7,16 +7,19 @@ import json
 import os
 import streamlit.components.v1 as components
 
-# Configuración inicial
+# ==========================================
+# CONFIGURACIÓN INICIAL
+# ==========================================
 st.set_page_config(page_title="Dashboard de Videos en Tendencia", layout="wide")
 
-# 1. Detectar la carpeta base
+# 1. Detectar la carpeta base (Programa)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Configuración de rutas
+# 2. Configuración de rutas dinámicas
 html_path = os.path.join(BASE_DIR, "templates", "Dashboard.html")
 csv_path = os.path.join(BASE_DIR, "data", "USvideos_cc50_202101.csv")
 json_path = os.path.join(BASE_DIR, "data", "US_category_id.json")
+
 # Carpetas de datos limpios
 data_limpios_dir = os.path.join(BASE_DIR, "data_limpios")
 clean_path = os.path.join(data_limpios_dir, "EEUU_limpio.csv")
@@ -59,11 +62,11 @@ def cargar_datos():
     df["trending_date_dt"] = pd.to_datetime(df["trending_date"], format="%y.%d.%m", errors="coerce")
     df["publish_year"] = df["publish_time"].dt.year
 
-    # Crear carpeta si no existe
+    # Crear carpeta si no existe y guardar datos limpios
     os.makedirs(data_limpios_dir, exist_ok=True)
     df.to_csv(clean_path, index=False)
 
-    # Guardar JSONs para que el HTML Figma los use
+    # Guardar JSONs para inyección en el Dashboard HTML
     stats = {
         "total_rows": int(df.shape[0]),
         "total_views": int(df["views"].sum()),
@@ -91,55 +94,20 @@ def cargar_datos():
 
     return df
 
-
-# ==========================================
-# PREPARAR DATOS PARA EL DASHBOARD HTML
-# ==========================================
-# Leemos los archivos generados para pasárselos al HTML directamente
-def leer_json_seguro(ruta):
-    if os.path.exists(ruta):
-        with open(ruta, 'r', encoding='utf-8') as f:
-            return f.read()
-    return "{}" # Devuelve objeto vacío si no existe
-
-stats_js = leer_json_seguro(stats_path)
-state_js = leer_json_seguro(state_chart_path)
-dtype_js = leer_json_seguro(dtype_path)
-freq_js = leer_json_seguro(freq_path)
-
-# ==========================================
-# RENDERIZAR DISEÑO CON DATOS INYECTADOS
-# ==========================================
-if os.path.exists(html_path):
-    with open(html_path, 'r', encoding='utf-8') as f:
-        html_design = f.read()
-    
-    # REEMPLAZO DINÁMICO: 
-    # Sustituimos las llamadas fetch del JS por los datos que ya tiene Python
-    html_design = html_design.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
-    html_design = html_design.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
-    html_design = html_design.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
-    html_design = html_design.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
-
-    # Ocultar bordes de Streamlit para que el diseño ocupe toda la pantalla
-    st.markdown("""
-        <style>
-            .block-container {padding: 0rem;}
-            iframe {border: none;}
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Renderizado final (Ajusta height según el largo de tu diseño)
-    components.html(html_design, height=1000, scrolling=True)
-else:
-    st.error("Archivo Dashboard.html no encontrado.")
-
-
-
-# Ejecutar carga
+# Ejecutar la lógica de datos
 df = cargar_datos()
 
-# Ocultar elementos de Streamlit para limpieza visual
+# ==========================================
+# ESTILOS Y PREPARACIÓN DE INYECCIÓN
+# ==========================================
+def leer_json_limpio(ruta):
+    if os.path.exists(ruta):
+        with open(ruta, 'r', encoding='utf-8') as f:
+            # Limpiamos saltos de línea para evitar errores de Syntax en JS
+            return f.read().replace('\n', ' ').replace("'", "\\'")
+    return "{}"
+
+# Ocultar elementos nativos de Streamlit para que el diseño Figma luzca profesional
 st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
@@ -150,32 +118,35 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # ==========================================
-# RENDERIZAR DISEÑO HTML CON DATOS INYECTADOS
+# RENDERIZAR DISEÑO HTML (CON INYECCIÓN)
 # ==========================================
 if os.path.exists(html_path):
     with open(html_path, 'r', encoding='utf-8') as f:
         html_content = f.read()
     
-    # Leemos los datos generados para pasarlos al JS del HTML
-    def get_json_str(path):
-        with open(path, 'r', encoding='utf-8') as f:
-            return f.read()
+    # Obtenemos los strings de los JSONs generados
+    stats_js = leer_json_limpio(stats_path)
+    state_js = leer_json_limpio(state_chart_path)
+    dtype_js = leer_json_limpio(dtype_path)
+    freq_js = leer_json_limpio(freq_path)
 
-    # Reemplazo de Fetch: Inyectamos los datos directamente en las llamadas fetch del JS
-    html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{get_json_str(stats_path)}'))")
-    html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{get_json_str(state_chart_path)}'))")
-    html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{get_json_str(dtype_path)}'))")
-    html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{get_json_str(freq_path)}'))")
+    # REEMPLAZO DINÁMICO DE FETCH:
+    # Sustituimos las promesas de fetch por los datos que ya tenemos listos
+    html_content = html_content.replace("fetch('../data_limpios/stats.json')", f"Promise.resolve(new Response('{stats_js}'))")
+    html_content = html_content.replace("fetch('../data_limpios/state_chart.json')", f"Promise.resolve(new Response('{state_js}'))")
+    html_content = html_content.replace("fetch('../data_limpios/dtype_distribution.json')", f"Promise.resolve(new Response('{dtype_js}'))")
+    html_content = html_content.replace("fetch('../data_limpios/freq_cat.json')", f"Promise.resolve(new Response('{freq_js}'))")
 
-    # Mostrar Dashboard Figma
-    components.html(html_content, height=900, scrolling=True)
+    # Renderizado del componente HTML (Figma Style)
+    components.html(html_content, height=950, scrolling=True)
 else:
-    st.error("No se encontró el archivo Dashboard.html")
+    st.error("No se encontró el archivo Dashboard.html en templates/")
 
-st.markdown("<br><h2 style='text-align:center; color:white;'>📊 Análisis Interactivo Detallado</h2>", unsafe_allow_html=True)
+st.markdown("<br><h2 style='text-align:center; color:white;'>🔍 Análisis Interactivo con Plotly</h2>", unsafe_allow_html=True)
+st.markdown("---")
 
 # ==========================================
-# SECCIÓN DE PREGUNTAS Y GRÁFICOS
+# SECCIÓN DE ANÁLISIS (SELECTBOX)
 # ==========================================
 preguntas = [
     "A. Clasificación con Regresión Logística",
@@ -192,7 +163,7 @@ preguntas = [
     "9. Matriz de correlación"
 ]
 
-opcion = st.selectbox("Elige una sección del análisis", preguntas)
+opcion = st.selectbox("Elige una sección del análisis detallado", preguntas)
 
 if opcion == preguntas[0]:   
     from sklearn.model_selection import train_test_split
